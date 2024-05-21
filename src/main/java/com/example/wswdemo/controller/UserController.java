@@ -2,11 +2,12 @@ package com.example.wswdemo.controller;
 
 
 import com.example.wswdemo.pojo.User;
+import com.example.wswdemo.pojo.textUser;
 import com.example.wswdemo.service.IUserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -14,20 +15,25 @@ import org.springframework.web.bind.annotation.*;
  * </p>
  *
  * @author Burtry
- * @since 2024-05-20
+ * @since 2024-05-21
  */
 @RestController
 @RequestMapping("/user")
-@Tag(name = "userController")
 public class UserController {
 
     @Autowired
     private IUserService userService;
 
-    @Operation(summary = "findUser")
-    @GetMapping("/find/{id}")
-    public User findUser(@PathVariable Long id) {
-        User user = userService.getById(id);
-        return user;
+
+    @GetMapping("/find")
+    public User findUser(textUser user) {
+        System.out.println(user);
+        return new User();
+    }
+
+    @PostMapping("/find")
+    public User textPost(@RequestBody textUser user) {
+        System.out.println(user);
+        return new User();
     }
 }

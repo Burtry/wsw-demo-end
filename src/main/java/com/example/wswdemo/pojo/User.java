@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author Burtry
- * @since 2024-05-20
+ * @since 2024-05-21
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -30,6 +30,11 @@ public class User implements Serializable {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 账号
+     */
+    private String account;
 
     /**
      * 密码
@@ -55,6 +60,16 @@ public class User implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
+     * 性别
+     */
+    private String sex;
 
 
 }

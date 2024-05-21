@@ -2,7 +2,6 @@ package com.example.wswdemo.mapper;
 
 import com.example.wswdemo.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -10,9 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author Burtry
- * @since 2024-05-20
+ * @since 2024-05-21
  */
-@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }
