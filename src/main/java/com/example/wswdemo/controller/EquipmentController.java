@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 用户表 前端控制器
+ * 器材表 前端控制器
  * </p>
  *
  * @author Burtry
  * @since 2024-06-06
  */
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/equipment")
+public class EquipmentController {
 
 }

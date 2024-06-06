@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 用户表
+ * 评价表
  * </p>
  *
  * @author Burtry
@@ -20,61 +20,43 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-public class User implements Serializable {
+@TableName("reviews")
+public class Reviews implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id
+     * 评价id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 账号
+     * 用户Id
      */
-    private String account;
+    private Long userId;
 
     /**
-     * 密码
+     * 评价类型(space/equipment)
      */
-    private String password;
+    private String reviewType;
 
     /**
-     * 用户名
+     * 评价对象id
      */
-    private String username;
+    private Long itemId;
 
     /**
-     * 性别
+     * 评分(1-5)
      */
-    private String sex;
+    private Integer rating;
 
     /**
-     * 角色(0为管理员,1为普通用户)
+     * 评价内容
      */
-    private Integer role;
+    private String comment;
 
-    /**
-     * 头像
-     */
-    private String avatar;
-
-    /**
-     * 邮箱
-     */
-    private String eMail;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
+    private LocalDateTime reviewTime;
 
 
 }

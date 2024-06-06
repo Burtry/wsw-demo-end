@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 用户表
+ * 租借表
  * </p>
  *
  * @author Burtry
@@ -20,60 +20,49 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-public class User implements Serializable {
+@TableName("rentals")
+public class Rentals implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id
+     * 租借id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 账号
+     * 用户id
      */
-    private String account;
+    private Long userId;
 
     /**
-     * 密码
+     * 器材id
      */
-    private String password;
+    private Long equipmentId;
 
     /**
-     * 用户名
+     * 租借开始时间
      */
-    private String username;
+    private LocalDateTime startTime;
 
     /**
-     * 性别
+     * 租借结束时间
      */
-    private String sex;
+    private LocalDateTime endTime;
 
     /**
-     * 角色(0为管理员,1为普通用户)
+     * 租借状态(已完成/进行中)
      */
-    private Integer role;
+    private String rentalStatus;
 
     /**
-     * 头像
+     * 备注
      */
-    private String avatar;
+    private String remark;
 
-    /**
-     * 邮箱
-     */
-    private String eMail;
-
-    /**
-     * 创建时间
-     */
     private LocalDateTime createTime;
 
-    /**
-     * 更新时间
-     */
     private LocalDateTime updateTime;
 
 

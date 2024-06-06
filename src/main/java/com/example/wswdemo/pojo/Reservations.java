@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 用户表
+ * 预约表
  * </p>
  *
  * @author Burtry
@@ -20,60 +20,49 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-public class User implements Serializable {
+@TableName("reservations")
+public class Reservations implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id
+     * 预约id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 账号
+     * 用户Id
      */
-    private String account;
+    private Long userId;
 
     /**
-     * 密码
+     * 场地id
      */
-    private String password;
+    private Long spaceId;
 
     /**
-     * 用户名
+     * 开始时间
      */
-    private String username;
+    private LocalDateTime startTime;
 
     /**
-     * 性别
+     * 结束时间
      */
-    private String sex;
+    private LocalDateTime endTime;
 
     /**
-     * 角色(0为管理员,1为普通用户)
+     * 预约状态(已确认/已取消)
      */
-    private Integer role;
+    private String reservationStatus;
 
     /**
-     * 头像
+     * 备注
      */
-    private String avatar;
+    private String remark;
 
-    /**
-     * 邮箱
-     */
-    private String eMail;
-
-    /**
-     * 创建时间
-     */
     private LocalDateTime createTime;
 
-    /**
-     * 更新时间
-     */
     private LocalDateTime updateTime;
 
 
