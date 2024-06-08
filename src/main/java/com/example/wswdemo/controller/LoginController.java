@@ -28,6 +28,9 @@ public class LoginController {
     public Result<UserVO> userLogin(String account, String password) {
             User user = userService.getByAccountAndPassword(account, password);
 
+        if (BeanUtil.isEmpty(user)) {
+            return Result.error("账号或密码错误！");
+        }
 
         //为用户生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
