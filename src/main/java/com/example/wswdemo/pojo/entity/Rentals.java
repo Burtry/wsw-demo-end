@@ -1,6 +1,5 @@
-package com.example.wswdemo.pojo;
+package com.example.wswdemo.pojo.entity;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 场地表
+ * 租借表
  * </p>
  *
  * @author Burtry
@@ -21,41 +20,46 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("space")
-public class Space implements Serializable {
+@TableName("rentals")
+public class Rentals implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 场地Id
+     * 租借id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 场地名称
+     * 用户id
      */
-    private String spaceName;
+    private Long userId;
 
     /**
-     * 场地类型
+     * 器材id
      */
-    private String spaceType;
+    private Long equipmentId;
 
     /**
-     * 位置
+     * 租借开始时间
      */
-    private String location;
+    private LocalDateTime startTime;
 
     /**
-     * 价格
+     * 租借结束时间
      */
-    private BigDecimal price;
+    private LocalDateTime endTime;
 
     /**
-     * 描述
+     * 租借状态(已完成/进行中)
      */
-    private String description;
+    private String rentalStatus;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     private LocalDateTime createTime;
 

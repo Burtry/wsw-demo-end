@@ -1,6 +1,6 @@
 package com.example.wswdemo.service.impl;
 
-import com.example.wswdemo.pojo.Equipment;
+import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.mapper.EquipmentMapper;
 import com.example.wswdemo.service.IEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

@@ -1,6 +1,6 @@
 package com.example.wswdemo.service.impl;
 
-import com.example.wswdemo.pojo.Space;
+import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.mapper.SpaceMapper;
 import com.example.wswdemo.service.ISpaceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

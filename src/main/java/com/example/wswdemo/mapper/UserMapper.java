@@ -1,6 +1,6 @@
 package com.example.wswdemo.mapper;
 
-import com.example.wswdemo.pojo.User;
+import com.example.wswdemo.pojo.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

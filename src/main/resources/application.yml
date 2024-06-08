@@ -6,7 +6,7 @@ spring:
     username: root
     password: 123456
 
-# springdoc-openapi????
+# springdoc-openapi
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -14,4 +14,10 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /v3/api-docs
+
+wsw:
+  jwt:
+    user-secret-key: burtry
+    user-token-name: token
+    user-ttl: 72000000
 

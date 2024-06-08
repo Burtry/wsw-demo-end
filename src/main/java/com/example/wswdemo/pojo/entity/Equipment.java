@@ -1,5 +1,6 @@
-package com.example.wswdemo.pojo;
+package com.example.wswdemo.pojo.entity;
 
+import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,7 +12,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 预约表
+ * 器材表
  * </p>
  *
  * @author Burtry
@@ -20,46 +21,46 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("reservations")
-public class Reservations implements Serializable {
+@TableName("equipment")
+public class Equipment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 预约id
+     * 器材id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 用户Id
+     * 器材名称
      */
-    private Long userId;
+    private String equipmentName;
 
     /**
-     * 场地id
+     * 器材类型
      */
-    private Long spaceId;
+    private String equipmentType;
 
     /**
-     * 开始时间
+     * 数量
      */
-    private LocalDateTime startTime;
+    private Integer number;
 
     /**
-     * 结束时间
+     * 租借价格
      */
-    private LocalDateTime endTime;
+    private BigDecimal rentalPrice;
 
     /**
-     * 预约状态(已确认/已取消)
+     * 状态
      */
-    private String reservationStatus;
+    private String status;
 
     /**
-     * 备注
+     * 描述
      */
-    private String remark;
+    private String description;
 
     private LocalDateTime createTime;
 

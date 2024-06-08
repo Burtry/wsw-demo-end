@@ -1,6 +1,6 @@
 package com.example.wswdemo.service;
 
-import com.example.wswdemo.pojo.User;
+import com.example.wswdemo.pojo.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
+    /**
+     * 根据账号和密码查询用户
+     * @param account
+     * @param password
+     * @return
+     */
+    User getByAccountAndPassword(String account, String password);
 }

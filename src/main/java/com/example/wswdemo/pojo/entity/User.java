@@ -1,6 +1,5 @@
-package com.example.wswdemo.pojo;
+package com.example.wswdemo.pojo.entity;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 器材表
+ * 用户表
  * </p>
  *
  * @author Burtry
@@ -21,49 +20,74 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("equipment")
-public class Equipment implements Serializable {
+@TableName("user")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 器材id
+     * 用户id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 器材名称
+     * 账号
      */
-    private String equipmentName;
+    private String account;
 
     /**
-     * 器材类型
+     * 密码
      */
-    private String equipmentType;
+    private String password;
 
     /**
-     * 数量
+     * 用户名
      */
-    private Integer number;
+    private String username;
 
     /**
-     * 租借价格
+     * 性别
      */
-    private BigDecimal rentalPrice;
+    private String sex;
 
     /**
-     * 状态
+     * 角色(0为管理员,1为普通用户)
      */
-    private String status;
+    private Integer role;
 
     /**
-     * 描述
+     * 头像
      */
-    private String description;
+    private String avatar;
 
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 邮箱
+     */
+    private String eMail;
+
+    /**
+     * 现居城市
+     */
+    private String address;
+
+    /**
+     * 详细地址
+     */
+    private String detailAddress;
+    /**
+     * 创建时间
+     */
     private LocalDateTime createTime;
 
+    /**
+     * 更新时间
+     */
     private LocalDateTime updateTime;
 
 

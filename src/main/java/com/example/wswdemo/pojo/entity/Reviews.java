@@ -1,4 +1,4 @@
-package com.example.wswdemo.pojo;
+package com.example.wswdemo.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

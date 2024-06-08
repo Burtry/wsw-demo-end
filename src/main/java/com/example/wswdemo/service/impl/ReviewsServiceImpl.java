@@ -1,6 +1,6 @@
 package com.example.wswdemo.service.impl;
 
-import com.example.wswdemo.pojo.Reviews;
+import com.example.wswdemo.pojo.entity.Reviews;
 import com.example.wswdemo.mapper.ReviewsMapper;
 import com.example.wswdemo.service.IReviewsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
