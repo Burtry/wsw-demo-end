@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.wswdemo.pojo.dto.UserDTO;
+import com.example.wswdemo.pojo.dto.UserRegisterDTO;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.service.IUserService;
@@ -39,11 +40,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     @Override
-    public void register(UserDTO userDTO) {
+    public void register(UserRegisterDTO userRegisterDTO) {
+
         //进行md5加密
-        String md5PassWord = Md5Util.getMD5String(userDTO.getPassword());
+        String md5PassWord = Md5Util.getMD5String(userRegisterDTO.getPassword());
         User user = new User();
-        BeanUtil.copyProperties(userDTO,user);
+        BeanUtil.copyProperties(userRegisterDTO,user);
         user.setPassword(md5PassWord);
         //设置为普通用户
         user.setRole(1);

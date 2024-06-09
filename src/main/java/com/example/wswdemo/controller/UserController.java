@@ -2,6 +2,7 @@ package com.example.wswdemo.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.example.wswdemo.pojo.dto.UserDTO;
+import com.example.wswdemo.pojo.dto.UserRegisterDTO;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.pojo.vo.UserVO;
 import com.example.wswdemo.properties.JwtProperties;
@@ -54,15 +55,23 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody UserDTO userDTO) {
-        User user = userService.lambdaQuery().eq(User::getAccount, userDTO.getAccount()).one();
-        if (user == null) {
-            //注册
-            userService.register(userDTO);
-            return Result.success();
+    public Result register(@RequestBody UserRegisterDTO userRegisterDTO) {
+
+        //判断两次密码是否一致
+        if (!userRegisterDTO.getPassword().equals(userRegisterDTO.getCheckPass())) {
+            //不一致
+            return Result.error("密码不一致!");
         }
-        //账号存在
-        return Result.error("账号已存在!");
+        //根据账号查询是否存在
+        User user = userService.lambdaQuery().eq(User::getAccount, userRegisterDTO.getAccount()).one();
+        if (user != null) {
+            //账号存在
+            return Result.error("账号已存在!");
+        }
+
+        //注册
+        userService.register(userRegisterDTO);
+        return Result.success();
     }
 
 

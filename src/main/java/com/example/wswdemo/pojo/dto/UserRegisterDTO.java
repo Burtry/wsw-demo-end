@@ -1,31 +1,11 @@
 package com.example.wswdemo.pojo.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
-/**
- * <p>
- * 用户表
- * </p>
- *
- * @author Burtry
- * @since 2024-06-06
- */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("user")
-public class UserDTO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class UserRegisterDTO implements Serializable {
     /**
      * 账号
      */
@@ -35,6 +15,11 @@ public class UserDTO implements Serializable {
      * 密码
      */
     private String password;
+
+    /**
+     * 确认密码
+     */
+    private String checkPass;
 
     /**
      * 用户名
@@ -65,7 +50,5 @@ public class UserDTO implements Serializable {
      * 详细地址
      */
     private String detailAddress;
-
-
 
 }
