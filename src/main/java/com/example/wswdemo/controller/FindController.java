@@ -1,22 +1,30 @@
 package com.example.wswdemo.controller;
 
+
 import cn.hutool.core.bean.BeanUtil;
 import com.example.wswdemo.pojo.entity.User;
+import com.example.wswdemo.pojo.entity.textUser;
 import com.example.wswdemo.pojo.vo.UserVO;
 import com.example.wswdemo.properties.JwtProperties;
 import com.example.wswdemo.service.IUserService;
 import com.example.wswdemo.utils.JwtUtil;
-import com.example.wswdemo.utils.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>
+ * 用户表 前端控制器
+ * </p>
+ *
+ * @author Burtry
+ * @since 2024-06-06
+ */
 @RestController
-public class LoginController {
+@RequestMapping("/user")
+public class FindController {
 
     @Autowired
     private IUserService userService;
@@ -24,13 +32,12 @@ public class LoginController {
     @Autowired
     private JwtProperties jwtProperties;
 
-    @PostMapping("/login")
-    public Result<UserVO> userLogin(String account, String password) {
-            User user = userService.getByAccountAndPassword(account, password);
 
-        if (BeanUtil.isEmpty(user)) {
-            return Result.error("账号或密码错误！");
-        }
+    @GetMapping("/find")
+    public UserVO find(textUser textUser) {
+
+        //查询用户
+        User user = userService.getById(1);
 
         //为用户生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
@@ -43,7 +50,12 @@ public class LoginController {
                 .token(token)
                 .build();
         BeanUtil.copyProperties(user,userVo);
-
-        return Result.success(userVo,"登录成功!");
+        return userVo;
     }
+
+
+
+
+
+
 }
