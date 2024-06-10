@@ -3,6 +3,7 @@ package com.example.wswdemo.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.example.wswdemo.pojo.dto.UserDTO;
 import com.example.wswdemo.pojo.dto.UserRegisterDTO;
+import com.example.wswdemo.pojo.dto.UserUpdateDTO;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.pojo.vo.UserVO;
 import com.example.wswdemo.properties.JwtProperties;
@@ -10,8 +11,10 @@ import com.example.wswdemo.service.IUserService;
 import com.example.wswdemo.utils.JwtUtil;
 import com.example.wswdemo.utils.Md5Util;
 import com.example.wswdemo.utils.result.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -71,6 +75,12 @@ public class UserController {
 
         //注册
         userService.register(userRegisterDTO);
+        return Result.success();
+    }
+
+    @PutMapping("/user")
+    public Result updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
+        userService.updateUser(userUpdateDTO);
         return Result.success();
     }
 

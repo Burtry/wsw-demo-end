@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.wswdemo.pojo.dto.UserDTO;
 import com.example.wswdemo.pojo.dto.UserRegisterDTO;
+import com.example.wswdemo.pojo.dto.UserUpdateDTO;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.service.IUserService;
@@ -52,5 +53,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
         save(user);
+    }
+
+    @Override
+    public void updateUser(UserUpdateDTO userUpdateDTO) {
+        lambdaUpdate().set(User::getUsername,userUpdateDTO.getUsername())
+                .set(User::getSex,userUpdateDTO.getSex())
+                .set(User::getPhone,userUpdateDTO.getPhone())
+                .set(User::getEMail,userUpdateDTO.getEMail())
+                .set(User::getAddress,userUpdateDTO.getAddress())
+                .set(User::getDetailAddress,userUpdateDTO.getDetailAddress())
+                .set(User::getUpdateTime,LocalDateTime.now())
+                .eq(User::getId,userUpdateDTO.getId()).update();
+
     }
 }
