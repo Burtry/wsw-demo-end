@@ -1,9 +1,15 @@
 package com.example.wswdemo.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.wswdemo.pojo.entity.Space;
+import com.example.wswdemo.service.ISpaceService;
+import com.example.wswdemo.utils.result.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -15,6 +21,53 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/space")
+@Slf4j
 public class SpaceController {
+
+    @Autowired
+    private ISpaceService spaceService;
+    @GetMapping()
+    public Result<List<Space>> getSpaceList() {
+        log.info("获取全部Space信息");
+
+        List<Space> spaceList = spaceService.list();
+
+        return Result.success(spaceList,"获取成功!");
+    }
+
+    @PostMapping()
+    public Result addSpace(@RequestBody Space space) {
+        log.info("新增Space信息");
+        spaceService.add(space);
+        return Result.success("操作成功!");
+    }
+
+    @DeleteMapping()
+    public Result deleteSpace(Long id) {
+        log.info("根据id删除场地");
+        spaceService.removeById(id);
+        return Result.success("操作成功!");
+    }
+
+    @PutMapping()
+    public Result update(@RequestBody Space space) {
+        log.info("更新场地信息");
+        spaceService.lambdaUpdate().set(Space::getSpaceName,space.getSpaceName())
+                .set(Space::getSpaceType,space.getSpaceType())
+                .set(Space::getPrice,space.getPrice())
+                .set(Space::getDescription,space.getDescription())
+                .set(Space::getUpdateTime, LocalDateTime.now())
+                .eq(Space::getId,space.getId())
+                .update();
+        return Result.success("更新成功!");
+    }
+
+    @GetMapping("/id")
+    public Result<Space> getById(Long id) {
+        log.info("场地id:" + id);
+        Space space = spaceService.getById(id);
+        return Result.success(space,"获取成功!");
+    }
+
 
 }

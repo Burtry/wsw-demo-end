@@ -6,6 +6,9 @@ import com.example.wswdemo.service.ISpaceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * <p>
  * 场地表 服务实现类
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements ISpaceService {
 
+
+    @Override
+    public void add(Space space) {
+        space.setCreateTime(LocalDateTime.now());
+        space.setUpdateTime(LocalDateTime.now());
+        save(space);
+    }
 }

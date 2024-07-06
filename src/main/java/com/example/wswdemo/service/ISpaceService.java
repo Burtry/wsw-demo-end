@@ -3,6 +3,8 @@ package com.example.wswdemo.service;
 import com.example.wswdemo.pojo.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 场地表 服务类
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISpaceService extends IService<Space> {
 
+
+    void add(Space space);
 }
