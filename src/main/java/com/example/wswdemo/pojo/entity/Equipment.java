@@ -42,10 +42,6 @@ public class Equipment implements Serializable {
      */
     private String equipmentType;
 
-    /**
-     * 数量
-     */
-    private Integer number;
 
     /**
      * 租借价格

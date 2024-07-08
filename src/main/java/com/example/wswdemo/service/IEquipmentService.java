@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEquipmentService extends IService<Equipment> {
 
+    void add(Equipment equipment);
 }
