@@ -1,6 +1,9 @@
 package com.example.wswdemo.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wswdemo.pojo.dto.PageDTO;
+import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.service.ISpaceService;
 import com.example.wswdemo.utils.result.Result;
@@ -27,12 +30,10 @@ public class SpaceController {
     @Autowired
     private ISpaceService spaceService;
     @GetMapping()
-    public Result<List<Space>> getSpaceList() {
-        log.info("获取全部Space信息");
+    public Result<PageDTO<Space>> getSpaceList(PageQuery pageQuery) {
 
-        List<Space> spaceList = spaceService.list();
-
-        return Result.success(spaceList,"获取成功!");
+        PageDTO<Space> spacePageDTO = spaceService.getSpaceOfPage(pageQuery);
+        return Result.success(spacePageDTO,"获取成功！");
     }
 
     @PostMapping()

@@ -1,6 +1,8 @@
 package com.example.wswdemo.controller;
 
 
+import com.example.wswdemo.pojo.dto.PageDTO;
+import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.service.IEquipmentService;
 import com.example.wswdemo.utils.result.Result;
@@ -26,9 +28,9 @@ public class EquipmentController {
     private IEquipmentService equipmentService;
 
     @GetMapping()
-    public Result<List<Equipment>> getEquipment() {
-        List<Equipment> list = equipmentService.list();
-        return Result.success(list,"获取成功!");
+    public Result<PageDTO<Equipment>> getEquipment(PageQuery pageQuery) {
+        PageDTO<Equipment> equipmentPageDTO = equipmentService.getEquipmentOfPage(pageQuery);
+        return Result.success(equipmentPageDTO,"分页获取成功！");
     }
 
 

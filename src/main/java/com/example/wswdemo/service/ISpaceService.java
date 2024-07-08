@@ -1,5 +1,7 @@
 package com.example.wswdemo.service;
 
+import com.example.wswdemo.pojo.dto.PageDTO;
+import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -17,4 +19,6 @@ public interface ISpaceService extends IService<Space> {
 
 
     void add(Space space);
+
+    PageDTO<Space> getSpaceOfPage(PageQuery pageQuery);
 }

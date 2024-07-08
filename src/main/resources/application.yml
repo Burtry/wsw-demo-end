@@ -6,6 +6,12 @@ spring:
     username: root
     password: 123456
 
+logging:
+  level:
+    com.example: debug
+  pattern:
+    dateformat: HH:mm:ss
+
 # springdoc-openapi
 springdoc:
   swagger-ui:
