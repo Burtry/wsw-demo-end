@@ -1,8 +1,6 @@
 package com.example.wswdemo.service;
 
-import com.example.wswdemo.pojo.dto.UserDTO;
-import com.example.wswdemo.pojo.dto.UserRegisterDTO;
-import com.example.wswdemo.pojo.dto.UserUpdateDTO;
+import com.example.wswdemo.pojo.dto.*;
 import com.example.wswdemo.pojo.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -35,4 +33,6 @@ public interface IUserService extends IService<User> {
      * @param userUpdateDTO
      */
     void updateUser(UserUpdateDTO userUpdateDTO);
+
+    PageDTO<User> getUserInfoOfPage(PageQuery pageQuery);
 }

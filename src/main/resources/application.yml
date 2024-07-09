@@ -25,5 +25,5 @@ wsw:
   jwt:
     user-secret-key: burtry
     user-token-name: token
-    user-ttl: 72000000
+    user-ttl: 7200000
 

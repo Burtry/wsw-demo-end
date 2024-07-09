@@ -21,7 +21,7 @@ public class WebConfig extends WebMvcConfigurationSupport{
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
     /**
-     * 静态映射(让knif4j文档可用)
+     * 静态映射
      * @param registry
      */
     @Override
@@ -36,6 +36,9 @@ public class WebConfig extends WebMvcConfigurationSupport{
         log.info("自定义拦截器...");
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
+                .addPathPatterns("/management/**")
+                .addPathPatterns("/space/**")
+                .addPathPatterns("/equipment/**")
                 //.excludePathPatterns("/user/find")
                 .excludePathPatterns("/login");
     }

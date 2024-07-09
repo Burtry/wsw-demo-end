@@ -1,9 +1,7 @@
 package com.example.wswdemo.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.example.wswdemo.pojo.dto.UserDTO;
-import com.example.wswdemo.pojo.dto.UserRegisterDTO;
-import com.example.wswdemo.pojo.dto.UserUpdateDTO;
+import com.example.wswdemo.pojo.dto.*;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.pojo.vo.UserVO;
 import com.example.wswdemo.properties.JwtProperties;
@@ -13,10 +11,7 @@ import com.example.wswdemo.utils.Md5Util;
 import com.example.wswdemo.utils.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,6 +79,39 @@ public class UserController {
         return Result.success();
     }
 
+    /**
+     * 分页获取用户信息
+     */
+
+    @GetMapping("/usermanagement")
+    public Result<PageDTO<User>> getUserListOfPage(PageQuery pageQuery) {
+        PageDTO<User> userPageDTO =  userService.getUserInfoOfPage(pageQuery);
+
+        return Result.success(userPageDTO,"获取成功!");
+    }
+
+    @DeleteMapping("/usermanagement")
+    public Result deleteUserById(Long id) {
+        userService.removeById(id);
+        return Result.success();
+    }
+
+
+    @PutMapping("/usermanagement")
+    public Result resetPassword(Long id) {
+        User user = userService.getById(id);
+        if (BeanUtil.isEmpty(user)) {
+            return Result.error("用户不存在！");
+        }
+
+        //重置密码
+        userService.lambdaUpdate()
+                .set(User::getPassword,"e10adc3949ba59abbe56e057f20f883e") //此字符串为md5加密后的123456
+                .eq(User::getId,user.getId())
+                .update();
+
+        return Result.success("重置密码成功！");
+    }
 
 
 

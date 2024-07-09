@@ -3,9 +3,8 @@ package com.example.wswdemo.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.wswdemo.pojo.dto.UserDTO;
-import com.example.wswdemo.pojo.dto.UserRegisterDTO;
-import com.example.wswdemo.pojo.dto.UserUpdateDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wswdemo.pojo.dto.*;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.service.IUserService;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,6 +65,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .set(User::getDetailAddress,userUpdateDTO.getDetailAddress())
                 .set(User::getUpdateTime,LocalDateTime.now())
                 .eq(User::getId,userUpdateDTO.getId()).update();
+
+    }
+
+    @Override
+    public PageDTO<User> getUserInfoOfPage(PageQuery pageQuery) {
+
+        //构建分页参数
+        Page<User> page = Page.of(pageQuery.getPageNum(), pageQuery.getPageSize());
+
+        //构建查询条件
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+
+        if (pageQuery.getSortBy() == null || pageQuery.getSortBy().isEmpty()) {
+            //默认按照更新时间降序排序
+            userQueryWrapper.orderByDesc("update_time");
+        } else  {
+            userQueryWrapper.orderByDesc(pageQuery.getSortBy());
+        }
+
+        //查询
+        Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
+
+        //数据校验
+        List<User> records = userPage.getRecords();
+        if (records.isEmpty()) {
+            return new PageDTO<>(userPage.getTotal(), userPage.getPages(), Collections.emptyList());
+        }
+
+        return new PageDTO<>(userPage.getTotal(), userPage.getPages(), records);
+
 
     }
 }
