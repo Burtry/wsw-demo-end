@@ -1,15 +1,15 @@
-package com.example.wswdemo.pojo.entity;
+package com.example.wswdemo.pojo.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -20,13 +20,8 @@ import lombok.experimental.Accessors;
  * @since 2024-06-06
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("reservations")
-public class Reservations implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+public class ReservationsDTO implements Serializable {
     /**
      * 预约id
      */
@@ -46,13 +41,13 @@ public class Reservations implements Serializable {
     /**
      * 开始时间
      */
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 
     /**
@@ -65,9 +60,6 @@ public class Reservations implements Serializable {
      */
     private String remark;
 
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
 
 }

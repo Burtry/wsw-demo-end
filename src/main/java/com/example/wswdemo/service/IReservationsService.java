@@ -1,5 +1,8 @@
 package com.example.wswdemo.service;
 
+import com.example.wswdemo.pojo.dto.PageDTO;
+import com.example.wswdemo.pojo.dto.PageQuery;
+import com.example.wswdemo.pojo.dto.ReservationsDTO;
 import com.example.wswdemo.pojo.entity.Reservations;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +16,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IReservationsService extends IService<Reservations> {
 
+    /**
+     * 分页获取预约信息
+     * @param pageQuery
+     * @return
+     */
+    PageDTO<Reservations> pageResult(PageQuery pageQuery);
+
+    void updateReservations(ReservationsDTO reservationsDTO);
 }

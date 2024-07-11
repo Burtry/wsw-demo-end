@@ -42,6 +42,8 @@ public class Space implements Serializable {
      */
     private String spaceType;
 
+    private String status = "0";    //未预约状态
+
     /**
      * 位置
      */
