@@ -25,5 +25,4 @@ wsw:
   jwt:
     user-secret-key: burtry
     user-token-name: token
-    user-ttl: 7200000
-
+    user-ttl: 7200000 #token有效期两小时
