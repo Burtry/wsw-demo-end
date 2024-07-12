@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * <p>
@@ -26,6 +25,7 @@ public class EquipmentController {
 
     @Autowired
     private IEquipmentService equipmentService;
+
 
     @GetMapping()
     public Result<PageDTO<Equipment>> getEquipment(PageQuery pageQuery) {

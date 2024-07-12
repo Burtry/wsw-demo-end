@@ -3,7 +3,6 @@ package com.example.wswdemo.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
@@ -11,7 +10,6 @@ import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.mapper.EquipmentMapper;
 import com.example.wswdemo.service.IEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.wswdemo.utils.context.BaseContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +30,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
     @Autowired
     private EquipmentMapper equipmentMapper;
+
 
     @Override
     public void add(Equipment equipment) {

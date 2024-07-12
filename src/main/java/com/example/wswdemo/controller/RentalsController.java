@@ -1,9 +1,16 @@
 package com.example.wswdemo.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.example.wswdemo.pojo.dto.PageDTO;
+import com.example.wswdemo.pojo.dto.PageQuery;
+import com.example.wswdemo.pojo.dto.RentalsDTO;
+import com.example.wswdemo.pojo.dto.ReservationsDTO;
+import com.example.wswdemo.pojo.entity.Rentals;
+import com.example.wswdemo.service.IRentalsService;
+import com.example.wswdemo.utils.result.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -15,6 +22,35 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rentals")
+@Slf4j
 public class RentalsController {
 
+    @Autowired
+    private IRentalsService rentalsService;
+
+
+    @GetMapping()
+    private Result<PageDTO<Rentals>> pageDTOResult(PageQuery pageQuery) {
+      log.info("分页获取租借信息");
+      PageDTO<Rentals> pageDTO = rentalsService.getResultOfPage(pageQuery);
+
+      return Result.success(pageDTO,"获取成功！");
+    }
+
+
+    @DeleteMapping("{id}")
+    public Result deleteRental(@PathVariable Long id) {
+        log.info("删除租借id" + id);
+
+        rentalsService.removeById(id);
+        return Result.success("删除成功！");
+    }
+
+
+    @PutMapping()
+    public Result updateRental(@RequestBody RentalsDTO rentalsDTO) {
+        log.info("租借信息修改");
+        rentalsService.updateRental(rentalsDTO);
+        return Result.success("更新成功!");
+    }
 }
