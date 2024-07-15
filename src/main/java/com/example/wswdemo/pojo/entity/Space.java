@@ -55,6 +55,11 @@ public class Space implements Serializable {
     private BigDecimal price;
 
     /**
+     * 图片
+     */
+    private String img;
+
+    /**
      * 描述
      */
     private String description;

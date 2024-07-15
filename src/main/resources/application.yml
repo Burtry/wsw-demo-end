@@ -27,5 +27,5 @@ wsw:
     user-token-name: token
     user-ttl: 7200000 #token有效期两小时
   alioss:
-    endpoint: "https://oss-cn-beijing.aliyuncs.com"
+    endpoint: "oss-cn-beijing.aliyuncs.com"
     bucket-name: "wsw-demo"
