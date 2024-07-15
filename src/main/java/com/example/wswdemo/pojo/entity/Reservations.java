@@ -58,7 +58,7 @@ public class Reservations implements Serializable {
     /**
      * 预约状态(已确认/已取消)
      */
-    private String reservationStatus;
+    private Integer reservationStatus;
 
     /**
      * 备注

@@ -58,9 +58,9 @@ public class RentalsDTO implements Serializable {
     private LocalDateTime endTime;
 
     /**
-     * 租借状态(已确认/已取消)
+     * 租借状态(3已完成/2进行中/1已确认/0已取消)
      */
-    private String rentalStatus;
+    private Integer rentalStatus;
 
     /**
      * 备注

@@ -51,9 +51,9 @@ public class ReservationsDTO implements Serializable {
     private LocalDateTime endTime;
 
     /**
-     * 预约状态(已确认/已取消)
+     * 预约状态(3已完成/2进行中/1已预约/0已取消)
      */
-    private String reservationStatus;
+    private Integer reservationStatus;
 
     /**
      * 备注

@@ -117,7 +117,7 @@ public class UserController {
     //验证用户身份
     @GetMapping("/management")
     public Result verifyIdentity(Long id) {
-        log.info("当前用户id: " + id);
+        log.info("token有效期校验,当前用户id: " + id);
         return Result.success("验证成功!");
     }
 

@@ -54,7 +54,7 @@ public class Rentals implements Serializable {
     /**
      * 租借状态(已完成/进行中)
      */
-    private String rentalStatus;
+    private Integer rentalStatus;
 
     /**
      * 备注
