@@ -24,6 +24,9 @@ public class CommonController {
     @PutMapping("/upload")
     public Result<String> upload(MultipartFile file) {
         log.info("进行文件上传:{}",file);
+        if (file == null) {
+            return Result.error("图片上传失败！");
+        }
         try {
             //原始文件名
             String originalFilename = file.getOriginalFilename();
