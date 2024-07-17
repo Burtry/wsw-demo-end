@@ -1,9 +1,9 @@
 package com.example.wswdemo.controller;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
+import com.example.wswdemo.pojo.dto.SpaceDTO;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.service.ISpaceService;
 import com.example.wswdemo.utils.result.Result;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * <p>
@@ -37,9 +36,9 @@ public class SpaceController {
     }
 
     @PostMapping()
-    public Result addSpace(@RequestBody Space space) {
+    public Result addSpace(@RequestBody SpaceDTO spaceDTO) {
         log.info("新增Space信息");
-        spaceService.add(space);
+        spaceService.add(spaceDTO);
         return Result.success("操作成功!");
     }
 

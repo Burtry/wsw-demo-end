@@ -1,9 +1,11 @@
 package com.example.wswdemo.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
+import com.example.wswdemo.pojo.dto.SpaceDTO;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.mapper.SpaceMapper;
 import com.example.wswdemo.service.ISpaceService;
@@ -12,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -30,7 +34,12 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
     private SpaceMapper spaceMapper;
 
     @Override
-    public void add(Space space) {
+    public void add(SpaceDTO spaceDTO) {
+        String imgUrls = Arrays.stream(spaceDTO.getImg())
+                .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
+                .collect(Collectors.joining(", ")); // 用逗号和空格连接
+        Space space = new Space();
+        BeanUtil.copyProperties(spaceDTO,space);
         space.setCreateTime(LocalDateTime.now());
         space.setUpdateTime(LocalDateTime.now());
         save(space);
