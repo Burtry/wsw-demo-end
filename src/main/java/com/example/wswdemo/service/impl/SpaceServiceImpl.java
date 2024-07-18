@@ -73,4 +73,17 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
             return new PageDTO<>(page.getTotal(), page.getPages(),records);
         }
     }
+
+
+    @Override
+    public void updateSpace(Space spaceDTO) {
+        lambdaUpdate().set(Space::getSpaceName,spaceDTO.getSpaceName())
+                .set(Space::getSpaceType,spaceDTO.getSpaceType())
+                .set(Space::getLocation,spaceDTO.getLocation())
+                .set(Space::getImg,spaceDTO.getImg())
+                .set(Space::getPrice,spaceDTO.getPrice())
+                .set(Space::getDescription,spaceDTO.getDescription())
+                .eq(Space::getId,spaceDTO.getId())
+                .update();
+    }
 }

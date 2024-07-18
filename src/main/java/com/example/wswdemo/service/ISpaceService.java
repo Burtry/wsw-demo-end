@@ -22,4 +22,6 @@ public interface ISpaceService extends IService<Space> {
     void add(SpaceDTO spaceDTO);
 
     PageDTO<Space> getSpaceOfPage(PageQuery pageQuery);
+
+    void updateSpace(Space space);
 }

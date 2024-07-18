@@ -52,13 +52,7 @@ public class SpaceController {
     @PutMapping()
     public Result update(@RequestBody Space space) {
         log.info("更新场地信息");
-        spaceService.lambdaUpdate().set(Space::getSpaceName,space.getSpaceName())
-                .set(Space::getSpaceType,space.getSpaceType())
-                .set(Space::getPrice,space.getPrice())
-                .set(Space::getDescription,space.getDescription())
-                .set(Space::getUpdateTime, LocalDateTime.now())
-                .eq(Space::getId,space.getId())
-                .update();
+        spaceService.updateSpace(space);
         return Result.success("更新成功!");
     }
 
