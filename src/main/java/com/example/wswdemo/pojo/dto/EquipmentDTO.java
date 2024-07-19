@@ -1,14 +1,15 @@
-package com.example.wswdemo.pojo.entity;
+package com.example.wswdemo.pojo.dto;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("equipment")
-public class Equipment implements Serializable {
+public class EquipmentDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,10 +44,10 @@ public class Equipment implements Serializable {
     private String equipmentType;
 
     /**
-     * 图片url(字符串)
+     * 图片url
      */
+    private String[] img;
 
-    private String img;
 
     /**
      * 租借价格

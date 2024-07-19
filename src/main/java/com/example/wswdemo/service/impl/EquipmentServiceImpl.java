@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wswdemo.pojo.dto.EquipmentDTO;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -33,11 +36,16 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
 
     @Override
-    public void add(Equipment equipment) {
-        Equipment newEquipment = BeanUtil.copyProperties(equipment, Equipment.class);
-        newEquipment.setCreateTime(LocalDateTime.now());
-        newEquipment.setUpdateTime(LocalDateTime.now());
-        save(newEquipment);
+    public void add(EquipmentDTO equipmentDTO) {
+
+        Arrays.stream(equipmentDTO.getImg())
+                .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
+                .collect(Collectors.joining(", "));
+        Equipment equipment = new Equipment();
+        BeanUtil.copyProperties(equipmentDTO, equipment);
+        equipment.setCreateTime(LocalDateTime.now());
+        equipment.setUpdateTime(LocalDateTime.now());
+        save(equipment);
     }
 
     /**

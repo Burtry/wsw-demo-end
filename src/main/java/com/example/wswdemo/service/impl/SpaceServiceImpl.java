@@ -35,9 +35,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
 
     @Override
     public void add(SpaceDTO spaceDTO) {
-        String imgUrls = Arrays.stream(spaceDTO.getImg())
+        Arrays.stream(spaceDTO.getImg())
                 .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
-                .collect(Collectors.joining(", ")); // 用逗号和空格连接
+                .collect(Collectors.joining(", "));
         Space space = new Space();
         BeanUtil.copyProperties(spaceDTO,space);
         space.setCreateTime(LocalDateTime.now());

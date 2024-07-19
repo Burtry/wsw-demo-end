@@ -1,5 +1,6 @@
 package com.example.wswdemo.service;
 
+import com.example.wswdemo.pojo.dto.EquipmentDTO;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
@@ -15,7 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IEquipmentService extends IService<Equipment> {
 
-    void add(Equipment equipment);
+    void add(EquipmentDTO equipmentDTO);
 
     PageDTO<Equipment> getEquipmentOfPage(PageQuery pageQuery);
 }

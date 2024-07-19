@@ -1,6 +1,7 @@
 package com.example.wswdemo.controller;
 
 
+import com.example.wswdemo.pojo.dto.EquipmentDTO;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
@@ -35,8 +36,8 @@ public class EquipmentController {
 
 
     @PostMapping()
-    public Result addEquipment(@RequestBody Equipment equipment) {
-        equipmentService.add(equipment);
+    public Result addEquipment(@RequestBody EquipmentDTO equipmentDTO) {
+        equipmentService.add(equipmentDTO);
         return Result.success();
     }
 
@@ -51,6 +52,7 @@ public class EquipmentController {
         equipmentService.lambdaUpdate()
                 .set(Equipment::getEquipmentName,equipment.getEquipmentName())
                 .set(Equipment::getEquipmentType,equipment.getEquipmentType())
+                .set(Equipment::getImg,equipment.getImg())
                 .set(Equipment::getRentalPrice,equipment.getRentalPrice())
                 .set(Equipment::getStatus,equipment.getStatus())
                 .set(Equipment::getDescription,equipment.getDescription())
