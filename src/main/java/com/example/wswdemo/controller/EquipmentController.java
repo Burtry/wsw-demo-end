@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -66,5 +67,11 @@ public class EquipmentController {
     public Result<Equipment> getById(@PathVariable Long id) {
         Equipment equipment = equipmentService.getById(id);
         return Result.success(equipment,"获取成功！");
+    }
+
+    @GetMapping("/all")
+    public Result<List<Equipment>> getAll() {
+        List<Equipment> list = equipmentService.list();
+        return Result.success(list,"获取成功！");
     }
 }
