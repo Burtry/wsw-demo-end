@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -61,6 +62,14 @@ public class SpaceController {
         log.info("场地id:" + id);
         Space space = spaceService.getById(id);
         return Result.success(space,"获取成功!");
+    }
+
+    @GetMapping("/all")
+    public Result<List<Space>> getAll() {
+        List<Space> list = spaceService.list();
+        //TODO 添加到Redis中
+
+        return Result.success(list,"获取成功!");
     }
 
 
