@@ -72,7 +72,7 @@ public class SpaceController {
     @GetMapping("/all")
     public Result<List<Space>> getAll() {
         //先查看Reids是否存在，存在直接返回
-        String redisKey = "all";
+        String redisKey = "space_all";
 
         List<Space> list;
         // 尝试从 Redis 中获取数据
@@ -85,7 +85,7 @@ public class SpaceController {
         //查询数据库
         list = spaceService.list();
         //TODO 添加到Redis中
-        redisTemplate.opsForValue().set("all",list);
+        redisTemplate.opsForValue().set("space_all",list);
         return Result.success(list,"获取成功!");
     }
 

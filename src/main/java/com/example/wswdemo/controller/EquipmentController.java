@@ -8,8 +8,10 @@ import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.service.IEquipmentService;
 import com.example.wswdemo.utils.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ClientInfoStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class EquipmentController {
 
     @Autowired
     private IEquipmentService equipmentService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     @GetMapping()
@@ -71,7 +75,16 @@ public class EquipmentController {
 
     @GetMapping("/all")
     public Result<List<Equipment>> getAll() {
-        List<Equipment> list = equipmentService.list();
+
+        List<Equipment> list;
+        list = (List<Equipment>) redisTemplate.opsForValue().get("equipment_all");
+
+        if(list != null) {
+            return Result.success(list,"获取成功!");
+        }
+        list = equipmentService.list();
+
+        redisTemplate.opsForValue().set("equipment_all",list);
         return Result.success(list,"获取成功！");
     }
 }
