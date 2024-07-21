@@ -9,9 +9,11 @@ import com.example.wswdemo.service.ISpaceService;
 import com.example.wswdemo.utils.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +31,9 @@ public class SpaceController {
 
     @Autowired
     private ISpaceService spaceService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
     @GetMapping()
     public Result<PageDTO<Space>> getSpaceList(PageQuery pageQuery) {
 
@@ -66,9 +71,21 @@ public class SpaceController {
 
     @GetMapping("/all")
     public Result<List<Space>> getAll() {
-        List<Space> list = spaceService.list();
-        //TODO 添加到Redis中
+        //先查看Reids是否存在，存在直接返回
+        String redisKey = "all";
 
+        List<Space> list;
+        // 尝试从 Redis 中获取数据
+        list = (List<Space>) redisTemplate.opsForValue().get(redisKey);
+
+        if (list != null) {
+            // 如果 Redis 中存在数据，直接返回
+            return Result.success(list, "获取成功!");
+        }
+        //查询数据库
+        list = spaceService.list();
+        //TODO 添加到Redis中
+        redisTemplate.opsForValue().set("all",list);
         return Result.success(list,"获取成功!");
     }
 
