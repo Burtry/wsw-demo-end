@@ -49,6 +49,8 @@ public class UserReservationVO {
      */
     private String location;
 
+    private String img;
+
     /**
      * 备注
      */

@@ -11,13 +11,12 @@ import com.example.wswdemo.pojo.entity.Reservations;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.service.user.IReservationService;
 import com.example.wswdemo.utils.context.BaseContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,11 +30,23 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
 
     @Autowired
     private SpaceMapper spaceMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
     @Override
     public List<UserReservationVO> getUserReservations() {
         Long userId = BaseContext.getCurrentId();
         //查询用户详细信息
-        User user = userMapper.selectById(userId);
+        Object object = redisTemplate.opsForValue().get("userId_" + userId);
+        User user = objectMapper.convertValue(object, User.class);
+        if (user == null) {
+            //从数据库获取用户信息
+            user = userMapper.selectById(userId);
+        }
+
         //获取用户名
         String username = user.getUsername();
 
@@ -46,9 +57,9 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         }
 
         // 收集所有场地ID
-        List<Long> spaceIds = reservationsList.stream()
+        Set<Long> spaceIds = reservationsList.stream()
                 .map(Reservations::getSpaceId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         // 一次性查询所有相关的场地信息
         Map<Long, Space> spaceMap = spaceMapper.selectBatchIds(spaceIds).stream()
@@ -64,6 +75,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
             userReservationVO.setSpaceName(space.getSpaceName());
             userReservationVO.setSpaceType(space.getSpaceType());
             userReservationVO.setLocation(space.getLocation());
+            userReservationVO.setImg(space.getImg());
 
             return userReservationVO;
         }).collect(Collectors.toList());

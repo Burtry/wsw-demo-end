@@ -11,10 +11,12 @@ import com.example.wswdemo.utils.Md5Util;
 import com.example.wswdemo.utils.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     private JwtProperties jwtProperties;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/login")
     public Result<UserVO> userLogin(String account, String password) {
@@ -43,6 +48,9 @@ public class UserController {
         //放入用户的唯一标识(userId: 用户id)
         claims.put("userId", user.getId());
         String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
+
+        //将用户存入redis中
+        redisTemplate.opsForValue().set("userId_"+user.getId(), user,2, TimeUnit.HOURS);
 
 
         UserVO userVo = UserVO.builder()
