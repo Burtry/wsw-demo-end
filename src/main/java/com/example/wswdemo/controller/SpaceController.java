@@ -7,6 +7,7 @@ import com.example.wswdemo.pojo.dto.SpaceDTO;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.service.ISpaceService;
 import com.example.wswdemo.utils.result.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,6 +35,12 @@ public class SpaceController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
+
     @GetMapping()
     public Result<PageDTO<Space>> getSpaceList(PageQuery pageQuery) {
 
@@ -66,8 +73,9 @@ public class SpaceController {
     public Result<Space> getById(Long id) {
         log.info("场地id:" + id);
         //在redis查询，如果存在直接返回该信息
-        Space space;
-        space = (Space) redisTemplate.opsForValue().get("spaceId_" + id);
+
+        Object object = redisTemplate.opsForValue().get("spaceId_" + id);
+        Space space = objectMapper.convertValue(object, Space.class);
         if (space != null) {
             return Result.success(space,"获取成功!");
         }
@@ -93,7 +101,6 @@ public class SpaceController {
         }
         //查询数据库
         list = spaceService.list();
-        //TODO 添加到Redis中
         redisTemplate.opsForValue().set("space_all",list);
         return Result.success(list,"获取成功!");
     }

@@ -7,6 +7,7 @@ import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.service.IEquipmentService;
 import com.example.wswdemo.utils.result.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,9 @@ public class EquipmentController {
     private IEquipmentService equipmentService;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @GetMapping()
@@ -70,7 +74,8 @@ public class EquipmentController {
     @GetMapping("{id}")
     public Result<Equipment> getById(@PathVariable Long id) {
 
-        Equipment equipment = (Equipment) redisTemplate.opsForValue().get("equipmentId_" + id);
+        Object object = redisTemplate.opsForValue().get("equipmentId_" + id);
+        Equipment equipment = objectMapper.convertValue(object, Equipment.class);
         if (equipment != null) {
             return Result.success(equipment,"获取成功!");
         }
