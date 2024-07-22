@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.ClientInfoStatus;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -83,7 +84,7 @@ public class EquipmentController {
         equipment = equipmentService.getById(id);
 
         //存入redis中
-        redisTemplate.opsForValue().set("equipmentId_" + equipment.getId(), equipment);
+        redisTemplate.opsForValue().set("equipmentId_" + equipment.getId(), equipment,1, TimeUnit.HOURS);
 
         return Result.success(equipment,"获取成功！");
     }

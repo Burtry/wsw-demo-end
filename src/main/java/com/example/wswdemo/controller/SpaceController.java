@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -82,7 +83,7 @@ public class SpaceController {
         space = spaceService.getById(id);
 
         //将该场地添加到redis中
-        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space);
+        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space,1, TimeUnit.HOURS);
         return Result.success(space,"获取成功!");
     }
 
