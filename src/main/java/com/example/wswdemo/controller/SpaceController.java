@@ -65,7 +65,16 @@ public class SpaceController {
     @GetMapping("/id")
     public Result<Space> getById(Long id) {
         log.info("场地id:" + id);
-        Space space = spaceService.getById(id);
+        //在redis查询，如果存在直接返回该信息
+        Space space;
+        space = (Space) redisTemplate.opsForValue().get("spaceId_" + id);
+        if (space != null) {
+            return Result.success(space,"获取成功!");
+        }
+        space = spaceService.getById(id);
+
+        //将该场地添加到redis中
+        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space);
         return Result.success(space,"获取成功!");
     }
 
