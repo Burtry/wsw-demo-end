@@ -50,9 +50,6 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
             user = userMapper.selectById(userId);
         }
 
-        //获取用户名
-        String username = user.getUsername();
-
         // 查询预约表中该用户创建的预约
         //根据radioStatus进行查询，-1全部, 0已取消,1已预约,2进行中,3已完成
         QueryWrapper<Reservations> listQueryWrapper = new QueryWrapper<>();
@@ -83,7 +80,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
 
             UserReservationVO userReservationVO = new UserReservationVO();
             BeanUtil.copyProperties(reservation, userReservationVO);
-            userReservationVO.setUsername(username);
+            userReservationVO.setUsername(finalUser.getUsername());
             userReservationVO.setPhone(finalUser.getPhone());
             userReservationVO.setEmail(finalUser.getEMail());
             userReservationVO.setSpaceName(space.getSpaceName());
