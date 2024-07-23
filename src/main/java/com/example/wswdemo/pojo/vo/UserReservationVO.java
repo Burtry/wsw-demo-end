@@ -18,6 +18,16 @@ public class UserReservationVO {
     private String username;
 
     /**
+     * 预约人手机号
+     */
+    private String phone;
+
+    /**
+     * 预约人邮箱
+     */
+    private String email;
+
+    /**
      * 场地名称
      */
     private String spaceName;
