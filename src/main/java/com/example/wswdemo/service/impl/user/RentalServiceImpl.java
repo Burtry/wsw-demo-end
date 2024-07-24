@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.wswdemo.mapper.EquipmentMapper;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.mapper.user.RentalMapper;
+import com.example.wswdemo.pojo.dto.RentalsDTO;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.pojo.entity.Rentals;
 import com.example.wswdemo.pojo.entity.User;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -100,4 +102,16 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
 
         return  userRentalVOList;
     }
+
+    @Override
+    public void addRental(RentalsDTO rentalsDTO) {
+        Rentals rental = new Rentals();
+        BeanUtil.copyProperties(rentalsDTO,rental);
+        rental.setCreateTime(LocalDateTime.now());
+        rental.setUpdateTime(LocalDateTime.now());
+        rental.setRentalStatus(1);  //已租借
+        save(rental);
+    }
+
+
 }
