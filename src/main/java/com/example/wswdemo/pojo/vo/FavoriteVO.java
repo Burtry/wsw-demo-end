@@ -45,6 +45,11 @@ public class FavoriteVO implements Serializable {
     private String name;
 
     /**
+     * 收藏物id
+     */
+    private Long favoriteId;
+
+    /**
      * 收藏物图片(url)
      */
     private String img;
