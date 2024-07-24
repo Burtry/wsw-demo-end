@@ -32,6 +32,12 @@ public class FavoriteController {
     @Autowired
     private IFavoriteService favoriteService;
 
+    @DeleteMapping()
+    public Result deleteFavorite(Long id) {
+        favoriteService.removeById(id);
+        return Result.success();
+    }
+
 
     @GetMapping()
     public Result<List<FavoriteVO>> getFavoriteList() {
