@@ -115,6 +115,13 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
+<!--        Quartz-->
+
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+
 
 
     </dependencies>
