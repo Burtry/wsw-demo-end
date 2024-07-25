@@ -54,4 +54,12 @@ public class ReservationsController {
         return Result.success("修改成功!");
     }
 
+
+    @PutMapping("/status/{id}")
+    public Result updateReservationStatus(@RequestParam Integer status, @PathVariable Long id) {
+        log.info("更新id: "+ id + "状态为" + status);
+        reservationsService.lambdaUpdate().set(Reservations::getReservationStatus,status)
+                .eq(Reservations::getId,id).update();
+        return Result.success("更新成功!");
+    }
 }

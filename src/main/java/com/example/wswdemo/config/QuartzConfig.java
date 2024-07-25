@@ -1,8 +1,10 @@
 package com.example.wswdemo.config;
 
 import com.example.wswdemo.factory.AutowiringSpringBeanJobFactory;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+import com.example.wswdemo.job.UpdateStatus;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
 import org.quartz.spi.JobFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 @Configuration
+@Slf4j
 public class QuartzConfig {
 
     @Autowired
     private AutowiringSpringBeanJobFactory jobFactory;
 
+
+    //创建调度器
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean() {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
@@ -22,8 +27,33 @@ public class QuartzConfig {
         return factory;
     }
 
+    //获取调度器
     @Bean
     public Scheduler scheduler() throws SchedulerException {
         return schedulerFactoryBean().getScheduler();
     }
+
+    //创建任务类
+    @Bean
+    public JobDetail updateStatusJobDetail() {
+        return JobBuilder.newJob(UpdateStatus.class)
+                .withIdentity("updateStatusJob")
+                .storeDurably()
+                .build();
+    }
+
+    //获取触发器
+    @Bean
+    public Trigger updateStatusJobTrigger() {
+        return TriggerBuilder.newTrigger()
+                .forJob(updateStatusJobDetail())
+                .withIdentity("updateStatusTrigger")
+                .startNow()
+                .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                        .withIntervalInMinutes(1)
+                        .repeatForever())
+                .build();
+    }
+
+
 }

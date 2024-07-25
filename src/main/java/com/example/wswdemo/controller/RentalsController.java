@@ -53,4 +53,12 @@ public class RentalsController {
         rentalsService.updateRental(rentalsDTO);
         return Result.success("更新成功!");
     }
+
+    @PutMapping("/status/{id}")
+    public Result updateRentalStatus(@RequestParam Integer status, @PathVariable Long id) {
+        log.info("更新id: "+ id + "状态为" + status);
+        rentalsService.lambdaUpdate().set(Rentals::getRentalStatus,status)
+                .eq(Rentals::getId,id).update();
+        return Result.success("更新成功!");
+    }
 }
