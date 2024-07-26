@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.awt.desktop.AboutEvent;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
 
     @Autowired
     private ObjectMapper objectMapper;
+
     @Override
     public List<UserReservationVO> getUserReservations(Integer radioStatus) {
         Long userId = BaseContext.getCurrentId();
@@ -104,5 +106,20 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         reservation.setUpdateTime(LocalDateTime.now());
         reservation.setReservationStatus(1); //已预约状态
         save(reservation);
+
+        //修改场地状态
+        Space space = spaceMapper.selectById(reservation.getSpaceId());
+        //判断redis中是否存在该信息，如果存在测删除
+        Object o = redisTemplate.opsForValue().get("spaceId_" + space.getId());
+        if (o != null) {
+            //删除redis中存储的场地信息
+            redisTemplate.delete("spaceId_" + space.getId());
+        }
+        space.setStatus("1");//预约状态
+        spaceMapper.updateById(space);
+
+        //将新的场地信息存储到redis中
+        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space);
+
     }
 }

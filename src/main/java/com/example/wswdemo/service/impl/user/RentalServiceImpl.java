@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.wswdemo.mapper.EquipmentMapper;
+import com.example.wswdemo.mapper.SpaceMapper;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.mapper.user.RentalMapper;
 import com.example.wswdemo.pojo.dto.RentalsDTO;
@@ -42,6 +43,7 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
 
     @Autowired
     private EquipmentMapper equipmentMapper;
+
 
 
     @Override
@@ -105,12 +107,26 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
 
     @Override
     public void addRental(RentalsDTO rentalsDTO) {
+
         Rentals rental = new Rentals();
         BeanUtil.copyProperties(rentalsDTO,rental);
         rental.setCreateTime(LocalDateTime.now());
         rental.setUpdateTime(LocalDateTime.now());
         rental.setRentalStatus(1);  //已租借
         save(rental);
+
+        //修改器材状态
+        Equipment equipment = equipmentMapper.selectById(rental.getEquipmentId());
+
+        Object o = redisTemplate.opsForValue().get("equipmentId_" + equipment.getId());
+
+        if (o != null) {
+            redisTemplate.delete("equipmentId_" + equipment.getId());
+        }
+
+        equipment.setStatus("1");//已租借
+
+        redisTemplate.opsForValue().set("equipmentId_" + equipment.getId(),equipment);
     }
 
 

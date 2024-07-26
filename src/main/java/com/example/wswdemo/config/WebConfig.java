@@ -40,7 +40,9 @@ public class WebConfig extends WebMvcConfigurationSupport{
                 .addPathPatterns("/space/**")
                 .addPathPatterns("/equipment/**")
                 //.excludePathPatterns("/user/find")
-                .excludePathPatterns("/login");
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/equipment/all")
+                .excludePathPatterns("/space/all");
     }
 
     /**
