@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -73,17 +71,7 @@ public class SpaceController {
     @GetMapping("/id")
     public Result<Space> getById(Long id) {
         log.info("场地id:" + id);
-        //在redis查询，如果存在直接返回该信息
-
-        Object object = redisTemplate.opsForValue().get("spaceId_" + id);
-        Space space = objectMapper.convertValue(object, Space.class);
-        if (space != null) {
-            return Result.success(space,"获取成功!");
-        }
-        space = spaceService.getById(id);
-
-        //将该场地添加到redis中
-        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space,1, TimeUnit.HOURS);
+        Space space = spaceService.getById(id);
         return Result.success(space,"获取成功!");
     }
 
@@ -102,7 +90,7 @@ public class SpaceController {
         }
         //查询数据库
         list = spaceService.list();
-        redisTemplate.opsForValue().set("space_all",list);
+        redisTemplate.opsForValue().set("space_all",list,4, TimeUnit.HOURS);
         return Result.success(list,"获取成功!");
     }
 

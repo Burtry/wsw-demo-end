@@ -74,18 +74,7 @@ public class EquipmentController {
 
     @GetMapping("{id}")
     public Result<Equipment> getById(@PathVariable Long id) {
-
-        Object object = redisTemplate.opsForValue().get("equipmentId_" + id);
-        Equipment equipment = objectMapper.convertValue(object, Equipment.class);
-        if (equipment != null) {
-            return Result.success(equipment,"获取成功!");
-        }
-        //查询数据库
-        equipment = equipmentService.getById(id);
-
-        //存入redis中
-        redisTemplate.opsForValue().set("equipmentId_" + equipment.getId(), equipment,1, TimeUnit.HOURS);
-
+        Equipment equipment = equipmentService.getById(id);
         return Result.success(equipment,"获取成功！");
     }
 
@@ -100,7 +89,7 @@ public class EquipmentController {
         }
         list = equipmentService.list();
 
-        redisTemplate.opsForValue().set("equipment_all",list);
+        redisTemplate.opsForValue().set("equipment_all",list,4,TimeUnit.HOURS);
         return Result.success(list,"获取成功！");
     }
 }

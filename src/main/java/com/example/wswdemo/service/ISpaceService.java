@@ -6,8 +6,6 @@ import com.example.wswdemo.pojo.dto.SpaceDTO;
 import com.example.wswdemo.pojo.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
-
 /**
  * <p>
  * 场地表 服务类
@@ -24,4 +22,5 @@ public interface ISpaceService extends IService<Space> {
     PageDTO<Space> getSpaceOfPage(PageQuery pageQuery);
 
     void updateSpace(Space space);
+
 }

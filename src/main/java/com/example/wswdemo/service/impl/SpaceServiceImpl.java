@@ -3,6 +3,7 @@ package com.example.wswdemo.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wswdemo.mapper.user.ReservationMapper;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.dto.SpaceDTO;
@@ -32,6 +33,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
 
     @Autowired
     private SpaceMapper spaceMapper;
+
+    @Autowired
+    private ReservationMapper reservationMapper;
 
     @Override
     public void add(SpaceDTO spaceDTO) {
@@ -86,4 +90,5 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
                 .eq(Space::getId,spaceDTO.getId())
                 .update();
     }
+
 }

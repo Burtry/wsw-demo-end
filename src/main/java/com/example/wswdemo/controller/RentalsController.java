@@ -5,7 +5,9 @@ import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.dto.RentalsDTO;
 import com.example.wswdemo.pojo.dto.ReservationsDTO;
+import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.pojo.entity.Rentals;
+import com.example.wswdemo.service.IEquipmentService;
 import com.example.wswdemo.service.IRentalsService;
 import com.example.wswdemo.utils.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class RentalsController {
 
     @Autowired
     private IRentalsService rentalsService;
+
+    @Autowired
+    private IEquipmentService equipmentService;
 
 
     @GetMapping()
@@ -57,6 +62,15 @@ public class RentalsController {
     @PutMapping("/status/{id}")
     public Result updateRentalStatus(@RequestParam Integer status, @PathVariable Long id) {
         log.info("更新id: "+ id + "状态为" + status);
+        if (status == 4) {
+            //已归还，则设置器材状态为0，未租借
+            Rentals rental = rentalsService.getById(id);
+            Long equipmentId = rental.getEquipmentId();
+            Equipment equipment = equipmentService.getById(equipmentId);
+
+            equipment.setStatus("0");
+            equipmentService.updateById(equipment);
+        }
         rentalsService.lambdaUpdate().set(Rentals::getRentalStatus,status)
                 .eq(Rentals::getId,id).update();
         return Result.success("更新成功!");

@@ -14,6 +14,7 @@ import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.pojo.vo.UserRentalVO;
 import com.example.wswdemo.service.user.IRentalService;
 import com.example.wswdemo.utils.context.BaseContext;
+import com.example.wswdemo.utils.result.ReservationResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -106,27 +107,43 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
     }
 
     @Override
-    public void addRental(RentalsDTO rentalsDTO) {
+    public ReservationResult addRental(RentalsDTO rentalsDTO) {
+
+        LocalDateTime startTime = rentalsDTO.getStartTime();
+        LocalDateTime endTime = rentalsDTO.getEndTime();
+        Long equipmentId = rentalsDTO.getEquipmentId();
+
+        //判断是否有时间冲突
+        QueryWrapper<Rentals> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("equipment_id",equipmentId)
+                .between("start_time",startTime,endTime)
+                .or()
+                .between("end_time",startTime,endTime)
+                .or()
+                .le("start_time",startTime)
+                .ge("end_time",endTime);
+
+        List<Rentals> conflictingRentalList = rentalMapper.selectList(queryWrapper);
+
+        //排除rental_status == 4的
+        List<Rentals> collected = conflictingRentalList.stream().filter(rental -> rental.getRentalStatus() != 4).collect(Collectors.toList());
+
+
+        if (!collected.isEmpty()) {
+            //冲突,返回 -1和第一个冲突时间
+            return ReservationResult.error(conflictingRentalList.get(0).getStartTime(),conflictingRentalList.get(0).getEndTime(),-1);
+        }
+        //添加租借
 
         Rentals rental = new Rentals();
         BeanUtil.copyProperties(rentalsDTO,rental);
         rental.setCreateTime(LocalDateTime.now());
         rental.setUpdateTime(LocalDateTime.now());
-        rental.setRentalStatus(1);  //已租借
+        rental.setRentalStatus(1);  //设置租借记录已租借
         save(rental);
 
-        //修改器材状态
-        Equipment equipment = equipmentMapper.selectById(rental.getEquipmentId());
+        return ReservationResult.success(1);
 
-        Object o = redisTemplate.opsForValue().get("equipmentId_" + equipment.getId());
-
-        if (o != null) {
-            redisTemplate.delete("equipmentId_" + equipment.getId());
-        }
-
-        equipment.setStatus("1");//已租借
-
-        redisTemplate.opsForValue().set("equipmentId_" + equipment.getId(),equipment);
     }
 
 

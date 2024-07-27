@@ -13,6 +13,7 @@ import com.example.wswdemo.pojo.entity.Reservations;
 import com.example.wswdemo.pojo.entity.User;
 import com.example.wswdemo.service.user.IReservationService;
 import com.example.wswdemo.utils.context.BaseContext;
+import com.example.wswdemo.utils.result.ReservationResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -98,28 +99,38 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
     }
 
     @Override
-    public void addReservation(ReservationsDTO reservationsDTO) {
+    public ReservationResult addReservation(ReservationsDTO reservationsDTO) {
 
+        //判断该时间段是否有冲突的预约，如果有则返回 -1 ,成功则返回 1
+        LocalDateTime startTime = reservationsDTO.getStartTime();
+        LocalDateTime endTime = reservationsDTO.getEndTime();
+        Long spaceId = reservationsDTO.getSpaceId();
+
+        // 检查该时间段内是否有冲突的预约
+        QueryWrapper<Reservations> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("space_id", spaceId)
+                .and(wrapper -> wrapper
+                        .between("start_time", startTime, endTime)
+                        .or()
+                        .between("end_time", startTime, endTime)
+                        .or()
+                        .le("start_time", startTime)
+                        .ge("end_time", endTime));
+
+        List<Reservations> conflictingReservationList = reservationMapper.selectList(queryWrapper);
+        if (!conflictingReservationList.isEmpty()) {
+            // 存在冲突预约，返回 -1
+            //获取第一个冲突返回
+            return ReservationResult.error(conflictingReservationList.get(0).getStartTime(),conflictingReservationList.get(0).getEndTime(),-1);
+        }
+
+        //添加预约
         Reservations reservation = new Reservations();
         BeanUtil.copyProperties(reservationsDTO,reservation);
         reservation.setCreateTime(LocalDateTime.now());
         reservation.setUpdateTime(LocalDateTime.now());
         reservation.setReservationStatus(1); //已预约状态
         save(reservation);
-
-        //修改场地状态
-        Space space = spaceMapper.selectById(reservation.getSpaceId());
-        //判断redis中是否存在该信息，如果存在测删除
-        Object o = redisTemplate.opsForValue().get("spaceId_" + space.getId());
-        if (o != null) {
-            //删除redis中存储的场地信息
-            redisTemplate.delete("spaceId_" + space.getId());
-        }
-        space.setStatus("1");//预约状态
-        spaceMapper.updateById(space);
-
-        //将新的场地信息存储到redis中
-        redisTemplate.opsForValue().set("spaceId_" + space.getId(),space);
-
+        return ReservationResult.success(1);
     }
 }
