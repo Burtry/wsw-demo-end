@@ -133,4 +133,22 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         save(reservation);
         return ReservationResult.success(1);
     }
+
+    @Override
+    public ReservationResult findReservationsByDateTime(LocalDateTime localDateTime) {
+
+        QueryWrapper<Reservations> reservationsQueryWrapper = new QueryWrapper<>();
+        //添加
+
+        reservationsQueryWrapper.le("start_time", localDateTime)
+                .ge("end_time", localDateTime);
+
+        List<Reservations> reservations = reservationMapper.selectList(reservationsQueryWrapper);
+
+        if (reservations.isEmpty()) {
+            return ReservationResult.success(1);
+        }
+        //返回第一个
+        return ReservationResult.error(reservations.get(0).getStartTime(),reservations.get(0).getEndTime(),-1);
+    }
 }

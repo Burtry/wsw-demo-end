@@ -6,6 +6,7 @@ import com.example.wswdemo.pojo.vo.UserReservationVO;
 import com.example.wswdemo.pojo.entity.Reservations;
 import com.example.wswdemo.utils.result.ReservationResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IReservationService extends IService<Reservations> {
@@ -13,4 +14,6 @@ public interface IReservationService extends IService<Reservations> {
     List<UserReservationVO> getUserReservations(Integer radioStatus);
 
     ReservationResult addReservation(ReservationsDTO reservationsDTO);
+
+    ReservationResult findReservationsByDateTime(LocalDateTime localDateTime);
 }
