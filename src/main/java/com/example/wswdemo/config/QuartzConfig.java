@@ -1,6 +1,7 @@
 package com.example.wswdemo.config;
 
 import com.example.wswdemo.factory.AutowiringSpringBeanJobFactory;
+import com.example.wswdemo.job.PrintWordsJob;
 import com.example.wswdemo.job.UpdateStatus;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class QuartzConfig {
 
     //获取调度器
     @Bean
-    public Scheduler scheduler() throws SchedulerException {
+    public Scheduler scheduler() {
         return schedulerFactoryBean().getScheduler();
     }
 
@@ -42,16 +43,15 @@ public class QuartzConfig {
                 .build();
     }
 
+
     //获取触发器
     @Bean
     public Trigger updateStatusJobTrigger() {
         return TriggerBuilder.newTrigger()
                 .forJob(updateStatusJobDetail())
                 .withIdentity("updateStatusTrigger")
-                .startNow()
-                .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInMinutes(1)
-                        .repeatForever())
+                .startNow() //启动时立即触发一次
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 * * * * ?")) // 每分钟执行一次
                 .build();
     }
 
