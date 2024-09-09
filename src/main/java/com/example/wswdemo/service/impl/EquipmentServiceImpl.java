@@ -12,6 +12,7 @@ import com.example.wswdemo.mapper.EquipmentMapper;
 import com.example.wswdemo.service.IEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     @Autowired
     private EquipmentMapper equipmentMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @Override
     public void add(EquipmentDTO equipmentDTO) {
@@ -46,6 +50,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
         equipment.setCreateTime(LocalDateTime.now());
         equipment.setUpdateTime(LocalDateTime.now());
         save(equipment);
+
+        //删除redis中的数据
+        redisTemplate.delete("equipment_all");
     }
 
     /**

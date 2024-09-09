@@ -12,6 +12,7 @@ import com.example.wswdemo.mapper.SpaceMapper;
 import com.example.wswdemo.service.ISpaceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
     @Autowired
     private ReservationMapper reservationMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public void add(SpaceDTO spaceDTO) {
         Arrays.stream(spaceDTO.getImg())
@@ -47,6 +51,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
         space.setCreateTime(LocalDateTime.now());
         space.setUpdateTime(LocalDateTime.now());
         save(space);
+
+        //删除redis中的数据
+        redisTemplate.delete("space_all");
     }
 
     @Override

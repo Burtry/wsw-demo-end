@@ -58,6 +58,8 @@ public class SpaceController {
     public Result deleteSpace(Long id) {
         log.info("根据id删除场地");
         spaceService.removeById(id);
+        //删除redis中的数据
+        redisTemplate.delete("space_all");
         return Result.success("操作成功!");
     }
 
@@ -65,6 +67,8 @@ public class SpaceController {
     public Result update(@RequestBody Space space) {
         log.info("更新场地信息");
         spaceService.updateSpace(space);
+        //删除redis中的数据
+        redisTemplate.delete("space_all");
         return Result.success("更新成功!");
     }
 

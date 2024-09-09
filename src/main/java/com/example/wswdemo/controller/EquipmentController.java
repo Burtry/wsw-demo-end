@@ -54,6 +54,8 @@ public class EquipmentController {
     @DeleteMapping()
     public Result deleteEquipment(Long id) {
         equipmentService.removeById(id);
+        //删除redis中的数据
+        redisTemplate.delete("equipment_all");
         return Result.success("删除成功！");
     }
 
@@ -69,6 +71,9 @@ public class EquipmentController {
                 .set(Equipment::getUpdateTime, LocalDateTime.now())
                 .eq(Equipment::getId,equipment.getId())
                 .update();
+
+        //删除redis中的数据
+        redisTemplate.delete("equipment_all");
         return Result.success("更新成功！");
     }
 
