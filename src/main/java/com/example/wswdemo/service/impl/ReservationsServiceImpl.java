@@ -11,6 +11,7 @@ import com.example.wswdemo.mapper.ReservationsMapper;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.service.IReservationsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class ReservationsServiceImpl extends ServiceImpl<ReservationsMapper, Res
 
     @Autowired
     private SpaceMapper spaceMapper;
+
 
     @Override
     public PageDTO<Reservations> pageResult(PageQuery pageQuery) {

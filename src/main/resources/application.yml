@@ -15,7 +15,15 @@ spring:
           - localhost:26380
           - localhost:26381
       password: 123456
-
+  rabbitmq:
+    host: 192.168.50.128
+    port: 5672
+    username: guest
+    password: 123456
+    virtual-host: /
+    listener:
+      simple:
+        prefetch: 1 #每次获取一条消息
 
 
 

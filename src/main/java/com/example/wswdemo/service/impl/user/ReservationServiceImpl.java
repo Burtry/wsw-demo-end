@@ -1,11 +1,14 @@
 package com.example.wswdemo.service.impl.user;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.wswdemo.config.RabbitMQConfig;
 import com.example.wswdemo.mapper.SpaceMapper;
 import com.example.wswdemo.mapper.UserMapper;
 import com.example.wswdemo.mapper.user.ReservationMapper;
+import com.example.wswdemo.pojo.dto.ReservationStatusMessage;
 import com.example.wswdemo.pojo.dto.ReservationsDTO;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.pojo.vo.UserReservationVO;
@@ -15,16 +18,25 @@ import com.example.wswdemo.service.user.IReservationService;
 import com.example.wswdemo.utils.context.BaseContext;
 import com.example.wswdemo.utils.result.ReservationResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.desktop.AboutEvent;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reservations> implements IReservationService{
 
     @Autowired
@@ -41,6 +53,9 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public List<UserReservationVO> getUserReservations(Integer radioStatus) {
@@ -131,7 +146,71 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         reservation.setUpdateTime(LocalDateTime.now());
         reservation.setReservationStatus(1); //已预约状态
         save(reservation);
+
+        //修改场地状态
+        Space space = spaceMapper.selectById(spaceId);
+        space.setStatus("1");//已预约
+        spaceMapper.updateById(space);
+
+
+        LocalDateTime reservationStartTime = reservation.getStartTime();
+        LocalDateTime reservationEndTime = reservation.getEndTime();
+
+        System.out.println(reservationStartTime);
+        System.out.println(reservationEndTime);
+
+        // 获取当前时间
+        LocalDateTime now = LocalDateTime.now();
+
+        System.out.println(now);
+
+        // 计算当前时间与过去时间的 Duration
+        Duration durationFromPast1 = Duration.between(now, reservationStartTime);
+        Duration durationFromPast2 = Duration.between(now, reservationEndTime);
+
+        // 获取相差的毫秒数
+        long millisecondsFromPast1 = durationFromPast1.toMillis();
+        long millisecondsFromPast2 = durationFromPast2.toMillis();
+
+        //封装对象
+        ReservationStatusMessage reservationStatusMessageStart = new ReservationStatusMessage();
+        reservationStatusMessageStart.setReservationId(reservation.getId());
+        reservationStatusMessageStart.setStatus("进行中");
+
+        ReservationStatusMessage reservationStatusMessageEnd = new ReservationStatusMessage();
+        reservationStatusMessageEnd.setReservationId(reservation.getId());
+        reservationStatusMessageEnd.setStatus("已完成");
+
+        //发送消息到延迟队列中
+        sendDelayedMessage(RabbitMQConfig.DELAYED_EXCHANGE_NAME,RabbitMQConfig.ROUTING_KEY,reservationStatusMessageStart,millisecondsFromPast1);
+
+        sendDelayedMessage(RabbitMQConfig.DELAYED_EXCHANGE_NAME,RabbitMQConfig.ROUTING_KEY,reservationStatusMessageEnd,millisecondsFromPast2);
+
+
         return ReservationResult.success(1);
+    }
+
+    /**
+     * 发送消息到延迟队列中
+     * @param exchange
+     * @param routingKey
+     * @param messageContent
+     * @param delay
+     */
+    private void sendDelayedMessage(String exchange, String routingKey, ReservationStatusMessage messageContent, long delay) {
+        // 设置消息属性（包括延迟时间）
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("x-delay", delay);
+
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setDelayLong(delay);
+        messageProperties.getHeaders().putAll(headers);
+
+        Message message = new Message(JSON.toJSONBytes(messageContent), messageProperties);
+
+        // 发送消息
+        rabbitTemplate.convertAndSend(exchange, routingKey, message);
+        System.out.println("Sent message: " + messageContent + " with delay: " + delay + " ms");
     }
 
     @Override

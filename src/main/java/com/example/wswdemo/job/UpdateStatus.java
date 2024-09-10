@@ -49,83 +49,83 @@ public class UpdateStatus implements Job {
     private IEquipmentService equipmentService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext) {
 
         LocalDateTime now = LocalDateTime.now();
-        log.info("更新预约记录");
-        // 查询所有需要更新的预约记录
-        log.info("查询所有要更新的预约记录");
-        List<Reservations> reservationsList = reservationsService.lambdaQuery()
-                .ne(Reservations::getReservationStatus, ReservationStatusConstant.COMPLETED)
-                .ne(Reservations::getReservationStatus,ReservationStatusConstant.CANCEL)
-                .list();//排除已完成、已取消
-
-        //更新预约状态
-        List<Reservations> updatedReservations = reservationsList.stream().map(reservation -> {
-             if (reservation.getEndTime().isBefore(now)) {
-                reservation.setReservationStatus(ReservationStatusConstant.COMPLETED);  //已完成
-            } else if (reservation.getStartTime().isBefore(now) && reservation.getEndTime().isAfter(now)) {
-                reservation.setReservationStatus(ReservationStatusConstant.CONTINUING);  //进行中
-            } else if (reservation.getStartTime().isAfter(now)) {
-                reservation.setReservationStatus(ReservationStatusConstant.RESERVED);  //已预约
-            }
-            return reservation;
-        }).toList();
-
-        if (updatedReservations.isEmpty()) {
-            log.info("没有要更新的预约记录");
-        } else {
-            // 批量更新预约记录
-            reservationsService.updateBatchById(updatedReservations);
-        }
-
-
-
-        log.info("更新场地状态");
-        //根据预约记录中的spaceId查询所有需要更新的场地
-        List<Long> spaceIds = reservationsList.stream()
-                .map(Reservations::getSpaceId)
-                .distinct()
-                .collect(Collectors.toList());
-        if (spaceIds.isEmpty()) {
-            log.info("没有要更新的场地！");
-        } else {
-            //获取需要更新的场地信息
-            List<Space> spaceList = spaceService.lambdaQuery()
-                    .in(Space::getId, spaceIds)
-                    .list();
-            // 更新场地状态
-            List<Space> updatedSpaces = spaceList.stream().map(space -> {
-                // 获取当前场地的预约记录
-                List<Reservations> spaceReservations = reservationsList.stream()
-                        .filter(reservation -> reservation.getSpaceId().equals(space.getId()))
-                        .collect(Collectors.toList());
-
-                // 判断场地状态
-                boolean isContinuing = spaceReservations.stream().anyMatch(reservation ->
-                        reservation.getReservationStatus().equals(ReservationStatusConstant.CONTINUING)
-                );
-                boolean isReserved = spaceReservations.stream().anyMatch(reservation ->
-                        reservation.getReservationStatus().equals(ReservationStatusConstant.RESERVED)
-                );
-
-                if (isContinuing) {
-                    space.setStatus("1"); // 当前时间使用中
-                } else if (!isReserved) {
-                    space.setStatus("0"); // 当前时间未使用
-                }
-
-                return space;
-            }).toList();
-
-            // 批量更新场地记录
-            if (updatedSpaces.isEmpty()) {
-                log.info("没有要更新的预约记录");
-            } else {
-                spaceService.updateBatchById(updatedSpaces);
-            }
-
-        }
+        //log.info("更新预约记录");
+        //// 查询所有需要更新的预约记录
+        //log.info("查询所有要更新的预约记录");
+        //List<Reservations> reservationsList = reservationsService.lambdaQuery()
+        //        .ne(Reservations::getReservationStatus, ReservationStatusConstant.COMPLETED)
+        //        .ne(Reservations::getReservationStatus,ReservationStatusConstant.CANCEL)
+        //        .list();//排除已完成、已取消
+        //
+        ////更新预约状态
+        //List<Reservations> updatedReservations = reservationsList.stream().map(reservation -> {
+        //     if (reservation.getEndTime().isBefore(now)) {
+        //        reservation.setReservationStatus(ReservationStatusConstant.COMPLETED);  //已完成
+        //    } else if (reservation.getStartTime().isBefore(now) && reservation.getEndTime().isAfter(now)) {
+        //        reservation.setReservationStatus(ReservationStatusConstant.CONTINUING);  //进行中
+        //    } else if (reservation.getStartTime().isAfter(now)) {
+        //        reservation.setReservationStatus(ReservationStatusConstant.RESERVED);  //已预约
+        //    }
+        //    return reservation;
+        //}).toList();
+        //
+        //if (updatedReservations.isEmpty()) {
+        //    log.info("没有要更新的预约记录");
+        //} else {
+        //    // 批量更新预约记录
+        //    reservationsService.updateBatchById(updatedReservations);
+        //}
+        //
+        //
+        //
+        //log.info("更新场地状态");
+        ////根据预约记录中的spaceId查询所有需要更新的场地
+        //List<Long> spaceIds = reservationsList.stream()
+        //        .map(Reservations::getSpaceId)
+        //        .distinct()
+        //        .collect(Collectors.toList());
+        //if (spaceIds.isEmpty()) {
+        //    log.info("没有要更新的场地！");
+        //} else {
+        //    //获取需要更新的场地信息
+        //    List<Space> spaceList = spaceService.lambdaQuery()
+        //            .in(Space::getId, spaceIds)
+        //            .list();
+        //    // 更新场地状态
+        //    List<Space> updatedSpaces = spaceList.stream().map(space -> {
+        //        // 获取当前场地的预约记录
+        //        List<Reservations> spaceReservations = reservationsList.stream()
+        //                .filter(reservation -> reservation.getSpaceId().equals(space.getId()))
+        //                .collect(Collectors.toList());
+        //
+        //        // 判断场地状态
+        //        boolean isContinuing = spaceReservations.stream().anyMatch(reservation ->
+        //                reservation.getReservationStatus().equals(ReservationStatusConstant.CONTINUING)
+        //        );
+        //        boolean isReserved = spaceReservations.stream().anyMatch(reservation ->
+        //                reservation.getReservationStatus().equals(ReservationStatusConstant.RESERVED)
+        //        );
+        //
+        //        if (isContinuing) {
+        //            space.setStatus("1"); // 当前时间使用中
+        //        } else if (!isReserved) {
+        //            space.setStatus("0"); // 当前时间未使用
+        //        }
+        //
+        //        return space;
+        //    }).toList();
+        //
+        //    // 批量更新场地记录
+        //    if (updatedSpaces.isEmpty()) {
+        //        log.info("没有要更新的预约记录");
+        //    } else {
+        //        spaceService.updateBatchById(updatedSpaces);
+        //    }
+        //
+        //}
 
         log.info("更新租借状态");
         //查询所有需要更新的租借记录
