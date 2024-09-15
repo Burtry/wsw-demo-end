@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
+//@Transactional
 public class DelayedMessageReceiver {
 
 
@@ -29,11 +29,12 @@ public class DelayedMessageReceiver {
         ReservationStatusMessage reservationStatusMessage = JSON.parseObject(message, ReservationStatusMessage.class);
 
         Reservations reservation = reservationsService.getById(reservationStatusMessage.getReservationId());
-        Long spaceId = reservation.getSpaceId();
 
-        if (reservation == null) {
+        if (reservation == null || reservation.getSpaceId() == null) {
             return;
         }
+
+        Long spaceId = reservation.getSpaceId();
         if (reservationStatusMessage.getStatus().equals("进行中")) {
             reservation.setReservationStatus(2);//进行中
             //更新状态

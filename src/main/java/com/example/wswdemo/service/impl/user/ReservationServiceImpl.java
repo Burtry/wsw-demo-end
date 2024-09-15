@@ -156,13 +156,9 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         LocalDateTime reservationStartTime = reservation.getStartTime();
         LocalDateTime reservationEndTime = reservation.getEndTime();
 
-        System.out.println(reservationStartTime);
-        System.out.println(reservationEndTime);
 
         // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
-
-        System.out.println(now);
 
         // 计算当前时间与过去时间的 Duration
         Duration durationFromPast1 = Duration.between(now, reservationStartTime);
