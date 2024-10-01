@@ -1,6 +1,7 @@
 package com.example.wswdemo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -46,13 +47,14 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
                 .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
                 .collect(Collectors.joining(", "));
         Equipment equipment = new Equipment();
-        BeanUtil.copyProperties(equipmentDTO, equipment);
         equipment.setCreateTime(LocalDateTime.now());
         equipment.setUpdateTime(LocalDateTime.now());
         save(equipment);
 
         //删除redis中的数据
         redisTemplate.delete("equipment_all");
+
+        //TODO 向es中添加数据
     }
 
     /**

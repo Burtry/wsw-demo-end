@@ -1,6 +1,7 @@
 package com.example.wswdemo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.wswdemo.mapper.user.ReservationMapper;
@@ -54,6 +55,8 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
 
         //删除redis中的数据
         redisTemplate.delete("space_all");
+
+        //TODO 向es中添加数据
     }
 
     @Override
@@ -96,6 +99,8 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space> implements
                 .set(Space::getDescription,spaceDTO.getDescription())
                 .eq(Space::getId,spaceDTO.getId())
                 .update();
+
+        //TODO 修改es中添加数据
     }
 
 }

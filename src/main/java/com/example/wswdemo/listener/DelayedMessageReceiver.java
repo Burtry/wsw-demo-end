@@ -1,6 +1,5 @@
 package com.example.wswdemo.listener;
 
-
 import com.alibaba.fastjson.JSON;
 import com.example.wswdemo.config.RabbitMQConfig;
 import com.example.wswdemo.pojo.dto.ReservationStatusMessage;
@@ -8,15 +7,15 @@ import com.example.wswdemo.pojo.entity.Reservations;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.service.IReservationsService;
 import com.example.wswdemo.service.ISpaceService;
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
-//@Transactional
-public class DelayedMessageReceiver {
-
+public class DelayedMessageReceiver implements ChannelAwareMessageListener {
 
     @Autowired
     private IReservationsService reservationsService;
@@ -24,29 +23,42 @@ public class DelayedMessageReceiver {
     @Autowired
     private ISpaceService spaceService;
 
-    @RabbitListener(queues = RabbitMQConfig.DELAYED_QUEUE_NAME)
-    public void receiveMessage(String message) {
-        ReservationStatusMessage reservationStatusMessage = JSON.parseObject(message, ReservationStatusMessage.class);
+    @Override
+    @RabbitListener(queues = RabbitMQConfig.DELAYED_QUEUE_NAME, ackMode = "MANUAL") // 设置手动ACK模式
+    public void onMessage(Message message, Channel channel) throws Exception {
+        String messageBody = new String(message.getBody());
+        ReservationStatusMessage reservationStatusMessage = JSON.parseObject(messageBody, ReservationStatusMessage.class);
 
-        Reservations reservation = reservationsService.getById(reservationStatusMessage.getReservationId());
+        try {
+            Reservations reservation = reservationsService.getById(reservationStatusMessage.getReservationId());
 
-        if (reservation == null || reservation.getSpaceId() == null) {
-            return;
-        }
+            if (reservation == null || reservation.getSpaceId() == null) {
+                // 手动确认消息，表示该消息已处理（此处可以选择忽略该消息）
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+                return;
+            }
 
-        Long spaceId = reservation.getSpaceId();
-        if (reservationStatusMessage.getStatus().equals("进行中")) {
-            reservation.setReservationStatus(2);//进行中
-            //更新状态
-            reservationsService.updateById(reservation);
-        } else if (reservationStatusMessage.getStatus().equals("已完成")) {
-            reservation.setReservationStatus(3);//已完成
-            //更新状态
-            reservationsService.updateById(reservation);
-            //修改场地状态
-            Space space = spaceService.getById(spaceId);
-            space.setStatus("0");//修改成未预约状态
-            spaceService.updateById(space);
+            Long spaceId = reservation.getSpaceId();
+
+            if ("进行中".equals(reservationStatusMessage.getStatus())) {
+                reservation.setReservationStatus(2); // 进行中
+                reservationsService.updateById(reservation); // 更新预定状态
+            } else if ("已完成".equals(reservationStatusMessage.getStatus())) {
+                reservation.setReservationStatus(3); // 已完成
+                reservationsService.updateById(reservation); // 更新预定状态
+
+                // 修改场地状态
+                Space space = spaceService.getById(spaceId);
+                space.setStatus("0"); // 修改成未预约状态
+                spaceService.updateById(space); // 更新场地状态
+            }
+
+            // 手动确认消息，表示消息已成功处理
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+            // 出现异常，拒绝消息，并且重新入队
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+            throw e; // 抛出异常
         }
     }
 }

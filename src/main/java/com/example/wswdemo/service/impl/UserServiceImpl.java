@@ -1,7 +1,6 @@
 package com.example.wswdemo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.wswdemo.pojo.dto.*;
@@ -28,8 +27,19 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    /**
+     * 构造函数注入bean，好处
+     * 1.保证所需依赖在在对象创建时就被注入，避免空指针风险
+     * 2.有助于创建不可变对象，提高线程安全性
+     * 3.初始化保证
+     * 4.测试便利性
+     */
     @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @Override
     public User getByAccount(String account) {

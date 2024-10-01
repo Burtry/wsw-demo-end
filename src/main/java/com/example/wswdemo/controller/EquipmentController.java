@@ -75,6 +75,8 @@ public class EquipmentController {
         //删除redis中的数据
         redisTemplate.delete("equipment_all");
         return Result.success("更新成功！");
+
+        //TODO 修改es中添加数据
     }
 
     @GetMapping("{id}")
