@@ -89,4 +89,19 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
         return new PageDTO<>(page.getTotal(),page.getPages(),records);
 
     }
+
+    @Override
+    public void updateEquipment(Equipment equipment) {
+            lambdaUpdate()
+                .set(Equipment::getEquipmentName,equipment.getEquipmentName())
+                .set(Equipment::getEquipmentType,equipment.getEquipmentType())
+                .set(Equipment::getImg,equipment.getImg())
+                .set(Equipment::getRentalPrice,equipment.getRentalPrice())
+                .set(Equipment::getStatus,equipment.getStatus())
+                .set(Equipment::getDescription,equipment.getDescription())
+                .set(Equipment::getUpdateTime, LocalDateTime.now())
+                .eq(Equipment::getId,equipment.getId())
+                .update();
+        //TODO 修改es中添加数据
+    }
 }

@@ -61,22 +61,11 @@ public class EquipmentController {
 
     @PutMapping()
     public Result updateEquipment(@RequestBody Equipment equipment) {
-        equipmentService.lambdaUpdate()
-                .set(Equipment::getEquipmentName,equipment.getEquipmentName())
-                .set(Equipment::getEquipmentType,equipment.getEquipmentType())
-                .set(Equipment::getImg,equipment.getImg())
-                .set(Equipment::getRentalPrice,equipment.getRentalPrice())
-                .set(Equipment::getStatus,equipment.getStatus())
-                .set(Equipment::getDescription,equipment.getDescription())
-                .set(Equipment::getUpdateTime, LocalDateTime.now())
-                .eq(Equipment::getId,equipment.getId())
-                .update();
-
+        equipmentService.updateEquipment(equipment);
         //删除redis中的数据
         redisTemplate.delete("equipment_all");
         return Result.success("更新成功！");
 
-        //TODO 修改es中添加数据
     }
 
     @GetMapping("{id}")

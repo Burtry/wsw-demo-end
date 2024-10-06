@@ -19,4 +19,6 @@ public interface IEquipmentService extends IService<Equipment> {
     void add(EquipmentDTO equipmentDTO);
 
     PageDTO<Equipment> getEquipmentOfPage(PageQuery pageQuery);
+
+    void updateEquipment(Equipment equipment);
 }
