@@ -79,7 +79,7 @@ public class SpaceController {
         return Result.success(space,"获取成功!");
     }
 
-    @GetMapping("/all")
+    @GetMapping("/spaceAll")
     public Result<List<Space>> getAll() {
         //先查看Reids是否存在，存在直接返回
         String redisKey = "space_all";

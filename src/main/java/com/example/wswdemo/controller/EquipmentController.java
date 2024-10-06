@@ -74,7 +74,7 @@ public class EquipmentController {
         return Result.success(equipment,"获取成功！");
     }
 
-    @GetMapping("/all")
+    @GetMapping("/equipmentAll")
     public Result<List<Equipment>> getAll() {
 
         List<Equipment> list;

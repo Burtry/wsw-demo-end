@@ -1,11 +1,10 @@
 package com.example.wswdemo.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.example.wswdemo.constant.IDConstant;
+import com.example.wswdemo.constant.IndexConstant;
 import com.example.wswdemo.pojo.vo.SearchVO;
 import com.example.wswdemo.service.ISearchService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -35,7 +34,7 @@ public class SearchServiceImpl implements ISearchService {
     @Override
     public List<SearchVO> search(String searchInput) {
 
-        SearchRequest searchRequest = new SearchRequest(IDConstant.WSW_DEMO_TEST);
+        SearchRequest searchRequest = new SearchRequest(IndexConstant.WSW_DEMO_TEST);
 
         //构建DSL语句
         searchRequest.source().query(QueryBuilders.matchQuery("name",searchInput));

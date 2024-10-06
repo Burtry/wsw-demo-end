@@ -1,7 +1,7 @@
 package com.example.wswdemo;
 
 import com.alibaba.fastjson.JSON;
-import com.example.wswdemo.constant.IDConstant;
+import com.example.wswdemo.constant.IndexConstant;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.pojo.vo.SearchVO;
@@ -19,21 +19,16 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.core.TermVectorsResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.elasticsearch.search.sort.SortOrder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -102,7 +97,7 @@ public class ElasticSearchDemo {
 
         for (Space space : spaceList) {
             SearchVO searchVO = new SearchVO();
-            searchVO.setId(space.getId() + 10000L); //场地id 1开头
+            searchVO.setId(space.getId());
             searchVO.setName(space.getSpaceName());
             searchVO.setPrice(space.getPrice());
             searchVO.setUrl(space.getImg());
@@ -112,7 +107,7 @@ public class ElasticSearchDemo {
 
         for (Equipment equipment : equipmentList) {
             SearchVO searchVO = new SearchVO();
-            searchVO.setId(equipment.getId() + 20000L);//器材id 2开头
+            searchVO.setId(equipment.getId());
             searchVO.setName(equipment.getEquipmentName());
             searchVO.setPrice(equipment.getRentalPrice());
             searchVO.setUrl(equipment.getImg());
@@ -231,7 +226,7 @@ public class ElasticSearchDemo {
     @Test
     void testHighLight() throws IOException {
         //准备Request
-        SearchRequest searchRequest = new SearchRequest(IDConstant.WSW_DEMO_TEST);
+        SearchRequest searchRequest = new SearchRequest(IndexConstant.WSW_DEMO_TEST);
 
         //构建DSL
         //1.准备query

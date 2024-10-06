@@ -2,6 +2,7 @@ package com.example.wswdemo;
 
 import cn.hutool.bloomfilter.BitMapBloomFilter;
 import cn.hutool.bloomfilter.BitSetBloomFilter;
+import cn.hutool.core.util.IdUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.BitSet;
@@ -105,6 +106,12 @@ public class BloomFilterDemo {
 
         System.out.println(bitMapBloomFilter.contains("123"));
         System.out.println(bitMapBloomFilter.contains("456"));
+    }
+
+    @Test
+    void idtest() {
+        long id = IdUtil.getSnowflake(1, 1).nextId();
+        System.out.println(id);
     }
 }
 

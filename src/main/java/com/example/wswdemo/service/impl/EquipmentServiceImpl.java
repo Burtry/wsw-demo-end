@@ -2,20 +2,30 @@ package com.example.wswdemo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wswdemo.constant.IndexConstant;
 import com.example.wswdemo.pojo.dto.EquipmentDTO;
 import com.example.wswdemo.pojo.dto.PageDTO;
 import com.example.wswdemo.pojo.dto.PageQuery;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.mapper.EquipmentMapper;
+import com.example.wswdemo.pojo.vo.SearchVO;
 import com.example.wswdemo.service.IEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +41,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-06
  */
 @Service
+@Slf4j
 public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment> implements IEquipmentService {
 
     @Autowired
@@ -38,6 +49,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
 
 
     @Override
@@ -47,14 +61,34 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
                 .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
                 .collect(Collectors.joining(", "));
         Equipment equipment = new Equipment();
+        long equipmentId = IdUtil.getSnowflake(1, 1).nextId();
+        equipment.setId(equipmentId);
         equipment.setCreateTime(LocalDateTime.now());
         equipment.setUpdateTime(LocalDateTime.now());
         save(equipment);
 
         //删除redis中的数据
+        log.info("删除redis数据");
         redisTemplate.delete("equipment_all");
 
-        //TODO 向es中添加数据
+        log.info("向es中添加数据");
+        SearchVO searchVO = new SearchVO();
+        searchVO.setName(equipment.getEquipmentName());
+        searchVO.setType("equipment");
+        searchVO.setPrice(equipment.getRentalPrice());
+        searchVO.setUrl(equipment.getImg());
+        searchVO.setId(equipmentId);
+
+        IndexRequest indexRequest = new IndexRequest(IndexConstant.WSW_DEMO_TEST);
+        indexRequest.id(String.valueOf(equipmentId)).source(JSON.toJSONString(searchVO), XContentType.JSON);
+
+        try {
+            restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+            log.info("添加成功");
+        } catch (IOException e) {
+            log.error("添加失败");
+            throw new RuntimeException(e);
+        }
     }
 
     /**
