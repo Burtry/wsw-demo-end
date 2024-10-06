@@ -1,6 +1,7 @@
 package com.example.wswdemo;
 
 import com.alibaba.fastjson.JSON;
+import com.example.wswdemo.constant.IDConstant;
 import com.example.wswdemo.pojo.entity.Equipment;
 import com.example.wswdemo.pojo.entity.Space;
 import com.example.wswdemo.pojo.vo.SearchVO;
@@ -230,20 +231,20 @@ public class ElasticSearchDemo {
     @Test
     void testHighLight() throws IOException {
         //准备Request
-        SearchRequest searchRequest = new SearchRequest("wsw-demo-space");
+        SearchRequest searchRequest = new SearchRequest(IDConstant.WSW_DEMO_TEST);
 
         //构建DSL
         //1.准备query
-        searchRequest.source().query(QueryBuilders.matchQuery("spaceName","测试"));
+        searchRequest.source().query(QueryBuilders.matchQuery("name","测试"));
 
         //2.准备highlight
-        searchRequest.source().highlighter(new HighlightBuilder().field("spaceName"));
+        searchRequest.source().highlighter(new HighlightBuilder().field("name"));
 
         //发送请求
         SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
 
         //处理搜索结果
-        handResponse(response);
+        //handResponse(response);
         //处理高亮
         System.out.println("处理高亮如下：---------------------------------------");
         handResponseWithHigh(response);
@@ -258,7 +259,7 @@ public class ElasticSearchDemo {
 
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             if (!highlightFields.isEmpty()) {
-                HighlightField spaceName = highlightFields.get("spaceName");
+                HighlightField spaceName = highlightFields.get("name");
                 //System.out.println(spaceName);
                 space.setSpaceName(spaceName.getFragments()[0].string());
                 spaceList.add(space);
