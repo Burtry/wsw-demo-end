@@ -2,6 +2,8 @@ package com.example.wswdemo.pojo.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class SearchVO {
 
@@ -9,5 +11,9 @@ public class SearchVO {
 
     private String name;
 
-    private Float price;
+    private BigDecimal price;
+
+    private String url;
+
+    private String type;
 }

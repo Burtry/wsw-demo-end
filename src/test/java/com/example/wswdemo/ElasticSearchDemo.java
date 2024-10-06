@@ -103,7 +103,9 @@ public class ElasticSearchDemo {
             SearchVO searchVO = new SearchVO();
             searchVO.setId(space.getId() + 10000L); //场地id 1开头
             searchVO.setName(space.getSpaceName());
-            searchVO.setPrice(searchVO.getPrice());
+            searchVO.setPrice(space.getPrice());
+            searchVO.setUrl(space.getImg());
+            searchVO.setType("space");
             searchVOList.add(searchVO);
         }
 
@@ -111,7 +113,9 @@ public class ElasticSearchDemo {
             SearchVO searchVO = new SearchVO();
             searchVO.setId(equipment.getId() + 20000L);//器材id 2开头
             searchVO.setName(equipment.getEquipmentName());
-            searchVO.setPrice(searchVO.getPrice());
+            searchVO.setPrice(equipment.getRentalPrice());
+            searchVO.setUrl(equipment.getImg());
+            searchVO.setType("equipment");
             searchVOList.add(searchVO);
         }
 
@@ -167,14 +171,14 @@ public class ElasticSearchDemo {
         SearchRequest searchRequest = new SearchRequest("wsw-demo-space");
         //构建DSL参数
 
-        //searchRequest.source().query(QueryBuilders.matchQuery("spaceName","测试"));
+        searchRequest.source().query(QueryBuilders.matchQuery("spaceName","测试"));
 
         //searchRequest.source().query(QueryBuilders.termQuery("id", "38"));
 
         //searchRequest.source().query(QueryBuilders.rangeQuery("price").gt(20));
 
 
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("spaceName", "滑雪"));
+        //BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("spaceName", "滑雪"));
 
         //searchRequest.source().query(boolQueryBuilder);
 
@@ -188,10 +192,10 @@ public class ElasticSearchDemo {
 
         //functionScoreQuery.boostMode(CombineFunction.SUM);
 
-        searchRequest.source().query(boolQueryBuilder);
-        //添加排序则不会进行算分，按照排序规则排序
-        searchRequest.source().sort("price", SortOrder.DESC);
-        searchRequest.source().from(1).size(1);
+        //searchRequest.source().query(boolQueryBuilder);
+        ////添加排序则不会进行算分，按照排序规则排序
+        //searchRequest.source().sort("price", SortOrder.DESC);
+        //searchRequest.source().from(1).size(1);
 
         //将查询请求放入查询
         //searchRequest.source().query(functionScoreQuery);
