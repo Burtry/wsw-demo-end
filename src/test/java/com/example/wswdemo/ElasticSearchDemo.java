@@ -156,7 +156,7 @@ public class ElasticSearchDemo {
     @Test
     void testUpdateDoc() throws IOException {
         UpdateRequest request = new UpdateRequest("wsw-demo-space",String.valueOf(38));
-        request.doc("price",233);
+        request.doc("price",234,"location","测试更新");
 
         restHighLevelClient.update(request,RequestOptions.DEFAULT);
     }

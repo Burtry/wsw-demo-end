@@ -18,6 +18,7 @@ import com.example.wswdemo.service.IEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -136,6 +137,15 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
                 .set(Equipment::getUpdateTime, LocalDateTime.now())
                 .eq(Equipment::getId,equipment.getId())
                 .update();
-        //TODO 修改es中添加数据
+
+        UpdateRequest request = new UpdateRequest(IndexConstant.WSW_DEMO_TEST, String.valueOf(equipment.getId()));
+        request.doc("name",equipment.getEquipmentName(),"price",equipment.getRentalPrice(),"url", equipment.getImg());
+
+        try {
+            restHighLevelClient.update(request,RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
