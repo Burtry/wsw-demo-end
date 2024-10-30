@@ -33,7 +33,7 @@ public class DelayedMessageReceiver implements ChannelAwareMessageListener {
             Reservations reservation = reservationsService.getById(reservationStatusMessage.getReservationId());
 
             if (reservation == null || reservation.getSpaceId() == null) {
-                // 手动确认消息，表示该消息已处理（此处可以选择忽略该消息）
+                // 手动确认消息，表示该消息已处理（）
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
                 return;
             }

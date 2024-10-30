@@ -10,10 +10,11 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>wsw-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-TEST</version>
     <name>wsw-demo</name>
     <description>wsw-demo</description>
     <properties>
+        <source>17</source>
         <java.version>17</java.version>
     </properties>
     <dependencies>
@@ -109,12 +110,18 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.redisson</groupId>-->
+<!--            <artifactId>redisson</artifactId>-->
+<!--            <version>3.8.2</version>-->
+<!--        </dependency>-->
+
+
         <dependency>
             <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-            <version>3.8.2</version>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.33.0</version>
         </dependency>
-
 <!--        序列化-->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -154,18 +161,14 @@
 
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <mainClass>com.example.wswdemo.WswDemoApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

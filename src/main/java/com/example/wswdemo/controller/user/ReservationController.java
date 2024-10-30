@@ -1,6 +1,7 @@
 package com.example.wswdemo.controller.user;
 
 import com.example.wswdemo.pojo.dto.ReservationsDTO;
+import com.example.wswdemo.pojo.entity.Reservations;
 import com.example.wswdemo.pojo.vo.UserReservationVO;
 import com.example.wswdemo.service.user.IReservationService;
 import com.example.wswdemo.utils.result.ReservationResult;
@@ -46,19 +47,27 @@ public class ReservationController {
 
 
     @GetMapping("/date")
-    public Result getLocalDateTimeReservationInfo(@RequestParam("localDateTime") String localDateTimeStr) {
+    public Result getLocalDateTimeReservationInfo(@RequestParam("localDateTime") String localDateTimeStr,@RequestParam("spaceId") Long spaceId) {
+
         log.info("获取在当前时间段已有的预约记录");
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
             ZonedDateTime utcZonedDateTime = ZonedDateTime.parse(localDateTimeStr, formatter);
             LocalDateTime localDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
 
-            ReservationResult result = reservationService.findReservationsByDateTime(localDateTime);
+            ReservationResult result = reservationService.findReservationsByDateTime(localDateTime,spaceId);
             return Result.success(result, "成功获取已有预约");
         } catch (DateTimeParseException e) {
             log.error("日期时间解析失败: {}", e.getMessage());
             return Result.error("日期时间格式错误");
         }
 
+    }
+
+
+    @GetMapping("/dateAll")
+    public Result getReservationAll(@RequestParam("spaceId") Long spaceId) {
+        List<Reservations> list = reservationService.getAllReservationBySpaceId(spaceId);
+        return Result.success(list,"获取成功!");
     }
 }

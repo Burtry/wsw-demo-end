@@ -15,5 +15,7 @@ public interface IReservationService extends IService<Reservations> {
 
     ReservationResult addReservation(ReservationsDTO reservationsDTO);
 
-    ReservationResult findReservationsByDateTime(LocalDateTime localDateTime);
+    ReservationResult findReservationsByDateTime(LocalDateTime localDateTime,Long spaceId);
+
+    List<Reservations> getAllReservationBySpaceId(Long spaceId);
 }

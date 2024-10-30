@@ -116,12 +116,13 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
         //判断是否有时间冲突
         QueryWrapper<Rentals> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("equipment_id",equipmentId)
-                .between("start_time",startTime,endTime)
-                .or()
-                .between("end_time",startTime,endTime)
-                .or()
-                .le("start_time",startTime)
-                .ge("end_time",endTime);
+                .and(wrapper -> wrapper
+                        .between("start_time", startTime, endTime)
+                        .or()
+                        .between("end_time", startTime, endTime)
+                        .or()
+                        .le("start_time", startTime)
+                        .ge("end_time", endTime));
 
         List<Rentals> conflictingRentalList = rentalMapper.selectList(queryWrapper);
 

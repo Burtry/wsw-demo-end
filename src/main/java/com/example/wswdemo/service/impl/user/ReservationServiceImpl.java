@@ -210,13 +210,13 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
     }
 
     @Override
-    public ReservationResult findReservationsByDateTime(LocalDateTime localDateTime) {
+    public ReservationResult findReservationsByDateTime(LocalDateTime localDateTime, Long spaceId) {
 
         QueryWrapper<Reservations> reservationsQueryWrapper = new QueryWrapper<>();
         //添加
 
         reservationsQueryWrapper.le("start_time", localDateTime)
-                .ge("end_time", localDateTime);
+                .ge("end_time", localDateTime).eq("space_id",spaceId);
 
         List<Reservations> reservations = reservationMapper.selectList(reservationsQueryWrapper);
 
@@ -225,5 +225,17 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         }
         //返回第一个
         return ReservationResult.error(reservations.get(0).getStartTime(),reservations.get(0).getEndTime(),-1);
+    }
+
+    @Override
+    public List<Reservations> getAllReservationBySpaceId(Long spaceId) {
+
+        QueryWrapper<Reservations> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.eq("space_id",spaceId).eq("reservation_status",1);//获取该场地所有已预约的信息
+
+        List<Reservations> reservations = reservationMapper.selectList(queryWrapper);
+
+        return reservations;
     }
 }
