@@ -62,6 +62,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
                 .map(imgUrl -> "\"" + imgUrl + "\"") // 将每个URL用双引号括起来
                 .collect(Collectors.joining(", "));
         Equipment equipment = new Equipment();
+        BeanUtil.copyProperties(equipmentDTO,equipment);
         long equipmentId = IdUtil.getSnowflake(1, 1).nextId();
         equipment.setId(equipmentId);
         equipment.setCreateTime(LocalDateTime.now());
