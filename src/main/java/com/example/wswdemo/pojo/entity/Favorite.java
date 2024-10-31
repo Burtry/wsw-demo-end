@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -46,6 +48,7 @@ public class Favorite implements Serializable {
     /**
      * 收藏物id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long favoriteId;
 
     /**

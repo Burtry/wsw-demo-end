@@ -117,10 +117,6 @@ public class RentalServiceImpl extends ServiceImpl<RentalMapper, Rentals> implem
         QueryWrapper<Rentals> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("equipment_id",equipmentId)
                 .and(wrapper -> wrapper
-                        .between("start_time", startTime, endTime)
-                        .or()
-                        .between("end_time", startTime, endTime)
-                        .or()
                         .le("start_time", startTime)
                         .ge("end_time", endTime));
 

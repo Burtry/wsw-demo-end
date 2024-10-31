@@ -125,10 +125,6 @@ public class ReservationServiceImpl extends ServiceImpl<ReservationMapper, Reser
         QueryWrapper<Reservations> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("space_id", spaceId)
                 .and(wrapper -> wrapper
-                        .between("start_time", startTime, endTime)
-                        .or()
-                        .between("end_time", startTime, endTime)
-                        .or()
                         .le("start_time", startTime)
                         .ge("end_time", endTime));
 

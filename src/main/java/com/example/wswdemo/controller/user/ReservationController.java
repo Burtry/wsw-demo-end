@@ -16,6 +16,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("user/reservation")
@@ -24,6 +25,8 @@ public class ReservationController {
 
     @Autowired
     private IReservationService reservationService;
+
+    private final ReentrantLock lock = new ReentrantLock();
 
 
     @GetMapping()
@@ -35,14 +38,25 @@ public class ReservationController {
 
     @PostMapping()
     public Result addReservation(@RequestBody ReservationsDTO reservationsDTO) {
-        log.info("添加预约:" + reservationsDTO);
-        ReservationResult result = reservationService.addReservation(reservationsDTO);
-        //结果为-1，预约冲突，重新选择预约实现,
-        if (result.getCode() == -1) {
-            return Result.error("添加失败", result);
+
+        if (lock.tryLock()) {
+            try {
+                log.info("添加预约:" + reservationsDTO);
+                ReservationResult result = reservationService.addReservation(reservationsDTO);
+                //结果为-1，预约冲突，重新选择预约实现,
+                if (result.getCode() == -1) {
+                    return Result.error("添加失败", result);
+                }
+                return Result.success("添加成功！");
+            } finally {
+                lock.unlock();
+            }
+        } else {
+            // 未获取到锁，立即返回错误信息
+            return Result.error("场地正在被操作，请稍后再试！");
         }
 
-        return Result.success("添加成功！");
+
     }
 
 

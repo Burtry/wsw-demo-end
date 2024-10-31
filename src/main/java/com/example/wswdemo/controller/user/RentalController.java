@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("user/rentals")
@@ -24,6 +25,8 @@ public class RentalController {
     @Autowired
     private IEquipmentService equipmentService;
 
+    private final ReentrantLock lock = new ReentrantLock();
+
 
     @GetMapping()
     public Result getUserRentals(Integer radioStatus) {
@@ -34,18 +37,27 @@ public class RentalController {
 
     @PostMapping()
     public Result addRental(@RequestBody RentalsDTO rentalsDTO) {
-        log.info("添加器材预约");
-        ReservationResult result = rentalService.addRental(rentalsDTO);
-        if (result.getCode() == -1) {
-            return Result.error("添加失败",result);
+        // 尝试获取锁，立即返回加锁结果
+        if (lock.tryLock()) {
+            try {
+                log.info("添加器材租借");
+                ReservationResult result = rentalService.addRental(rentalsDTO);
+                if (result.getCode() == -1) {
+                    return Result.error("添加失败", result);
+                }
+
+                Equipment equipment = equipmentService.getById(rentalsDTO.getEquipmentId());
+                equipment.setStatus("1"); // 设置器材为租借状态
+                equipmentService.updateById(equipment);
+
+                return Result.success("添加成功！");
+            } finally {
+                lock.unlock(); // 释放锁
+            }
+        } else {
+            // 未获取到锁，立即返回错误信息
+            return Result.error("器材正在被操作，请稍后再试！");
         }
-
-        Equipment equipment = equipmentService.getById(rentalsDTO.getEquipmentId());
-        //设置器材为租借状态
-        equipment.setStatus("1");
-        equipmentService.updateById(equipment);
-
-        return Result.success("添加成功！");
     }
 
 }

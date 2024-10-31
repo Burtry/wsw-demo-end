@@ -30,7 +30,7 @@ public class CommonController {
         try {
             //原始文件名
             String originalFilename = file.getOriginalFilename();
-            //截取原始文件名后缀(拓展名)    找到最后一个 . 的索引
+            //截取原始文件名后缀(拓展名)
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
 
             //构建新文件名称
